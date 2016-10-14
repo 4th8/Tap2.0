@@ -45,7 +45,7 @@ public class db {
 
 			connection = DriverManager.getConnection(
 					"jdbc:postgresql://localhost:5432/tap", "postgres",
-					"suk");
+					 "suk");
                         
 
 		} catch (SQLException e) {
