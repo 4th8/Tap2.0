@@ -1,0 +1,4 @@
+String getSensorLocation(String serialNumber);
+String AddData(String location, String serialNumber, double temp);
+
+
