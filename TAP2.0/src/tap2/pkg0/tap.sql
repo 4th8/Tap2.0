@@ -28,3 +28,9 @@ PRIMARY KEY (temp_id)
 INSERT INTO location (location_id,full_name,abbreviation)VALUES ('123', 'New York', 'ny');
 INSERT INTO sensor (sensor_serial, abbreviation) VALUES ('a1', 'ny');
 INSERT INTO temperature (temp_id,time_stamp,degrees_c,sensor_serial,location_id) VALUES ('1','12:00:00',40,'a1','123');
+
+Create Role postgres with login;
+Grant all on location to postgres;
+Grant all on sensor to postgres;
+Grant all on temperature to postgres;
+ALTER USER postgres WITH PASSWORD 'suk';
