@@ -11,7 +11,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 /**
  * Reads in the .csv file and adds the data to the database.
  * Will automatically find the S/N of the Sensor and use that to query the
- * database to find the location of that sensor. If no location exists will queary
+ * database to find the location of that sensor. If no location exists will query
  * the user to input the location and update the database with that location / SN combo
  * @author Nathan
  * 
@@ -36,6 +36,7 @@ public class ImportDataFile {
      */
     private void execute(){
         try {
+            
             XSSFWorkbook workbook = new XSSFWorkbook(filename);
             XSSFSheet sheet = workbook.getSheetAt(0);
              
