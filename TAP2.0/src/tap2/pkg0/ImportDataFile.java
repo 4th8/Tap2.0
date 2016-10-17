@@ -5,7 +5,11 @@
  * the user to input the location and update the database with that location / SN combo
  */
 package tap2.pkg0;
-import org.apache.poi.hssf.eventusermodel;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  *
@@ -20,7 +24,16 @@ public class ImportDataFile {
         execute();
     }
     private void execute(){
-        XSSFWorkbook workbook = new XSSFWorkbook(filename);
+        try {
+            XSSFWorkbook workbook = new XSSFWorkbook(filename);
+            XSSFSheet sheet = workbook.getSheetAt(0);
+             
+             
+        } catch (IOException ex) {
+            Logger.getLogger(ImportDataFile.class.getName()).log(Level.SEVERE, null, ex);
+        }
+           
+        
 }
     
 }
