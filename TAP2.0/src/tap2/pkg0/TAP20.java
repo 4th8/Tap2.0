@@ -24,11 +24,10 @@ public class TAP20 {
         String see;
         db dataBase = new db();
         dbQuery query = new dbQuery();
-        query.setInsertLocation("000", "DC", "d");
         try {
             //ResultSet rs =dataBase.executeSelect(query.get_All_Location_Field());
             //rs.next();
-            dataBase.executeInsert(query.getInsertIntoLocation());
+            dataBase.executeInsert(query.getInsertIntoLocation("000", "DC", "d"));
             //System.out.println(rs.getString(1));
             //db.connectToDB("Select * from location;");
         } catch (SQLException ex) {
