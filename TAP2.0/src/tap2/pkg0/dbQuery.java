@@ -19,12 +19,12 @@ public class dbQuery {
 
     ;
     
-    public void setInsertLocation(String id, String name, String abb) {
+    public void insertLocation(String id, String name, String abb) {
         insertIntoLocation = String.format("INSERT INTO location (location_id,full_name,abbreviation)VALUES ('%s', '%s', '%s');", id, name, abb);
     }
 
-    public String getInsertIntoLocation(String id, String name, String abb) {
-        insertIntoLocation = String.format("INSERT INTO location (location_id,full_name,abbreviation)VALUES ('%s', '%s', '%s');", id, name, abb);
+    public String getLocationWithSerialNumber(String SN) {
+        insertIntoLocation = String.format("INSERT INTO location (location_id,full_name,abbreviation)VALUES ('%s', '%s', '%s');", SN);
         return insertIntoLocation;
     }
 
