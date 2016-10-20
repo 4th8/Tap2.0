@@ -26,6 +26,7 @@ public class dataPage extends javax.swing.JFrame {
         initComponents();
     }
 
+    //Location GUI=new Location();
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -34,7 +35,11 @@ public class dataPage extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
+        tapPUEntityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("tapPU").createEntityManager();
+        locationQuery = java.beans.Beans.isDesignTime() ? null : tapPUEntityManager.createQuery("SELECT l FROM Location l");
+        locationList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : locationQuery.getResultList();
         jTabbedPane2 = new javax.swing.JTabbedPane();
         rawPanel2 = new javax.swing.JPanel();
         jLabel22 = new javax.swing.JLabel();
@@ -46,11 +51,11 @@ public class dataPage extends javax.swing.JFrame {
         qrdMonths1 = new javax.swing.JLabel();
         qrdDays1 = new javax.swing.JLabel();
         qrdHours1 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        TextArea = new javax.swing.JTable();
         importButton = new javax.swing.JButton();
         statusField = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         jTabbedPane1 = new javax.swing.JTabbedPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -78,16 +83,6 @@ public class dataPage extends javax.swing.JFrame {
 
         qrdHours1.setText("N/A");
 
-        TextArea.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-
-            }
-        ));
-        jScrollPane1.setViewportView(TextArea);
-
         importButton.setText("Import");
         importButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -109,53 +104,69 @@ public class dataPage extends javax.swing.JFrame {
             }
         });
 
+        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, locationList, jTable1);
+        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${fullName}"));
+        columnBinding.setColumnName("Full Name");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${abbreviation}"));
+        columnBinding.setColumnName("Abbreviation");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${locationId}"));
+        columnBinding.setColumnName("Location Id");
+        columnBinding.setColumnClass(String.class);
+        jTableBinding.setSourceNullValue(locationList);
+        jTableBinding.setSourceUnreadableValue(locationList);
+        bindingGroup.addBinding(jTableBinding);
+        jTableBinding.bind();
+        jScrollPane1.setViewportView(jTable1);
+
         javax.swing.GroupLayout rawPanel2Layout = new javax.swing.GroupLayout(rawPanel2);
         rawPanel2.setLayout(rawPanel2Layout);
         rawPanel2Layout.setHorizontalGroup(
             rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(rawPanel2Layout.createSequentialGroup()
-                .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(rawPanel2Layout.createSequentialGroup()
-                        .addGap(108, 108, 108)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 806, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(rawPanel2Layout.createSequentialGroup()
-                        .addGap(477, 477, 477)
-                        .addComponent(jLabel22)))
-                .addContainerGap(214, Short.MAX_VALUE))
+                .addGap(477, 477, 477)
+                .addComponent(jLabel22)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rawPanel2Layout.createSequentialGroup()
-                .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(rawPanel2Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(importButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1))
-                    .addGroup(rawPanel2Layout.createSequentialGroup()
-                        .addGap(204, 204, 204)
-                        .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(rawPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel26)
-                                .addGap(84, 84, 84)
-                                .addComponent(jLabel24))
-                            .addGroup(rawPanel2Layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(qrdYears1)
-                                .addGap(124, 124, 124)
-                                .addComponent(qrdMonths1)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel72)
-                            .addComponent(qrdDays1))))
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(rawPanel2Layout.createSequentialGroup()
-                        .addGap(73, 73, 73)
-                        .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel73)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rawPanel2Layout.createSequentialGroup()
+                        .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(rawPanel2Layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(qrdHours1))))
-                    .addGroup(rawPanel2Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(statusField, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(importButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton1))
+                            .addGroup(rawPanel2Layout.createSequentialGroup()
+                                .addGap(204, 204, 204)
+                                .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(rawPanel2Layout.createSequentialGroup()
+                                        .addComponent(jLabel26)
+                                        .addGap(84, 84, 84)
+                                        .addComponent(jLabel24))
+                                    .addGroup(rawPanel2Layout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addComponent(qrdYears1)
+                                        .addGap(124, 124, 124)
+                                        .addComponent(qrdMonths1)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 230, Short.MAX_VALUE)
+                                .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel72)
+                                    .addComponent(qrdDays1))))
+                        .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(rawPanel2Layout.createSequentialGroup()
+                                .addGap(73, 73, 73)
+                                .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel73)
+                                    .addGroup(rawPanel2Layout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addComponent(qrdHours1))))
+                            .addGroup(rawPanel2Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(statusField, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rawPanel2Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 826, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(215, 215, 215))
         );
         rawPanel2Layout.setVerticalGroup(
@@ -180,9 +191,9 @@ public class dataPage extends javax.swing.JFrame {
                     .addComponent(importButton)
                     .addComponent(statusField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         jTabbedPane2.addTab("Raw Data", rawPanel2);
@@ -204,9 +215,12 @@ public class dataPage extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        bindingGroup.bind();
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //private static String fileLocation;
     private void statusFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statusFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_statusFieldActionPerformed
@@ -214,13 +228,14 @@ public class dataPage extends javax.swing.JFrame {
     private void importButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importButtonActionPerformed
         JFileChooser chooser = new JFileChooser();
         int chooserValue = chooser.showOpenDialog(this);
-        if (chooserValue==JFileChooser.APPROVE_OPTION) {
+        if (chooserValue == JFileChooser.APPROVE_OPTION) {
             try {
                 Scanner fin = new Scanner(chooser.getSelectedFile());
                 String buffer = "";
                 while (fin.hasNext()) {
                     buffer += fin.nextLine() + "\n";
                 }
+                System.out.print(buffer);
                 //textArea.setText(buffer);
                 fin.close();
                 statusField.setText("Load " + chooser.getSelectedFile().getAbsolutePath());
@@ -233,11 +248,12 @@ public class dataPage extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         JFileChooser chooser = new JFileChooser();
         int chooserValue = chooser.showSaveDialog(this);
-        if(chooserValue==JFileChooser.APPROVE_OPTION) {
+        if (chooserValue == JFileChooser.APPROVE_OPTION) {
             try {
                 PrintWriter fout = new PrintWriter(chooser.getSelectedFile());
                 //fout.print(textArea.getText());
                 fout.close();
+
                 statusField.setText("Saved " + chooser.getSelectedFile().getAbsolutePath());
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(dataPage.class.getName()).log(Level.SEVERE, null, ex);
@@ -245,12 +261,11 @@ public class dataPage extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_jButton1ActionPerformed
-    private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {                                          
-       // textArea.setText("");
-       // statusField.setText("New file");
+    private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        // textArea.setText("");
+        // statusField.setText("New file");
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTable TextArea;
     private javax.swing.JButton importButton;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel22;
@@ -261,11 +276,16 @@ public class dataPage extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
+    private javax.swing.JTable jTable1;
+    private java.util.List<GUI.Location> locationList;
+    private javax.persistence.Query locationQuery;
     private javax.swing.JLabel qrdDays1;
     private javax.swing.JLabel qrdHours1;
     private javax.swing.JLabel qrdMonths1;
     private javax.swing.JLabel qrdYears1;
     private javax.swing.JPanel rawPanel2;
     private javax.swing.JTextField statusField;
+    private javax.persistence.EntityManager tapPUEntityManager;
+    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }
