@@ -25,10 +25,11 @@ public class TAP20 {
         db dataBase = new db();
         dbQuery query = new dbQuery();
         try {
-            //ResultSet rs =dataBase.executeSelect(query.get_All_Location_Field());
-            //rs.next();
-            dataBase.executeInsert(query.getInsertIntoLocation("000", "DC", "d"));
-            //System.out.println(rs.getString(1));
+            ResultSet rs =dataBase.executeSelect(query.getLocationIdBySerialNumber("k"));
+            rs.next();
+            //dataBase.executeInsert(query.insertTemperatureData("1998-01-08 04:05:06", 5,"k","000" ));
+            //dataBase.executeInsert(query.insertSensor("k", "D"));
+            System.out.println(rs.getString(1));
             //db.connectToDB("Select * from location;");
         } catch (SQLException ex) {
             Logger.getLogger(TAP20.class.getName()).log(Level.SEVERE, null, ex);
