@@ -85,17 +85,20 @@ public class dbQuery {
         return result;
     }
     public ResultSet getAllTemp(){
-        String All_Location_Field = "SELECT * FROM location;";
-        ResultSet result = null;
-        try {
+        
+            String All_Location_Field = "SELECT * FROM temperature;";
+            ResultSet result = null;
+        try {    
             database.executeSelect(All_Location_Field);
             result = database.executeSelect(All_Location_Field);
+            
+            /*
+            Thow Exception here.
+            */
+            return result;
         } catch (SQLException ex) {
             Logger.getLogger(dbQuery.class.getName()).log(Level.SEVERE, null, ex);
         }
-        /*
-        Thow Exception here.
-        */
         return result;
     }
         
