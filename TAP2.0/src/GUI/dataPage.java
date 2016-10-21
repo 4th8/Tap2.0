@@ -14,6 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import tap2.pkg0.dbQuery;
 
 /**
@@ -21,7 +22,8 @@ import tap2.pkg0.dbQuery;
  * @author marc
  */
 public class dataPage extends javax.swing.JFrame {
-
+    static class InvalidFilenameException extends Exception{};
+    static class NotCSVException extends Exception{};
     private dbQuery query;
     /**
      * Creates new form dataPage
@@ -232,6 +234,17 @@ public class dataPage extends javax.swing.JFrame {
     }//GEN-LAST:event_statusFieldActionPerformed
 
     private void importButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importButtonActionPerformed
+        try {
+            importFile();
+        } catch (InvalidFilenameException ex) {
+            JPanel panel = new JPanel();
+            JOptionPane.showMessageDialog(panel, "Name must include serial number. \n Ex: 2015_<<serialNumber>>_temp.csv", "Invalid Filename", JOptionPane.ERROR_MESSAGE);            
+        }catch (NotCSVException ex) {
+            JPanel panel = new JPanel();
+            JOptionPane.showMessageDialog(panel, "File must be a .csv format.", "Invalid Filetype", JOptionPane.ERROR_MESSAGE);            
+        }
+    }//GEN-LAST:event_importButtonActionPerformed
+    private void importFile()throws InvalidFilenameException, NotCSVException{
         JFileChooser chooser = new JFileChooser();
         String serialNumber = "";
         String locationID = "";
@@ -241,12 +254,25 @@ public class dataPage extends javax.swing.JFrame {
                 Scanner fin;
                 fin = new Scanner(chooser.getSelectedFile());
                 String filename = chooser.getSelectedFile().getName();
-                System.out.println("Filename: " + filename);
+                if(!filename.endsWith(".csv")){
+                    throw new NotCSVException();
+                }
                 Pattern pattern = Pattern.compile("([0-9]{6})");
                 Matcher matcher = pattern.matcher(filename);
                 if (matcher.find()){
                     serialNumber = (matcher.group(1));
-                    locationID = query.getLocationIdBySerialNumber(serialNumber);
+                    try {
+                        locationID = query.getLocationIdBySerialNumber(serialNumber);
+                    } catch (dbQuery.NoLocationException ex) {
+                        /*
+                        Add new location()
+                        */
+                        System.exit(-1);//Remove this...!!!
+                        
+                    }
+                }
+                else{
+                    throw new InvalidFilenameException();
                 }
 
                 fin.nextLine();
@@ -270,8 +296,7 @@ public class dataPage extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "File not found!");
             }
         }
-    }//GEN-LAST:event_importButtonActionPerformed
-
+    }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         JFileChooser chooser = new JFileChooser();
         int chooserValue = chooser.showSaveDialog(this);
