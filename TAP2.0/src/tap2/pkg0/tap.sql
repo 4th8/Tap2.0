@@ -25,8 +25,8 @@ location_id text,
 PRIMARY KEY (temp_id)
 );
 
-INSERT INTO location (location_id,full_name,abbreviation)VALUES ('123', 'New York', 'ny');
-INSERT INTO sensor (sensor_serial, abbreviation) VALUES ('a1', 'ny');
+INSERT INTO location (location_id,full_name,abbreviation)VALUES ('1', 'New York', 'nyc');
+INSERT INTO sensor (sensor_serial, abbreviation) VALUES ('625102', 'nyc');
 INSERT INTO temperature (temp_id,time_stamp,degrees_c,sensor_serial,location_id) VALUES ('1','1999-01-08 04:05:06',40.0,'a1','123');
 
 Create Role postgres with login;
