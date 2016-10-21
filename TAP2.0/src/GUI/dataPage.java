@@ -231,11 +231,13 @@ public class dataPage extends javax.swing.JFrame {
         if (chooserValue == JFileChooser.APPROVE_OPTION) {
             try {
                 Scanner fin = new Scanner(chooser.getSelectedFile());
-                String buffer = "";
-                while (fin.hasNext()) {
-                    buffer += fin.nextLine() + "\n";
+                while(fin.hasNext()){
+                    String rawline = fin.nextLine();
+                    String [] line = rawline.split(",");
+                    String timestamp = line[0];
+                    double temp = Double.parseDouble(line[1]);        
+                    
                 }
-                System.out.print(buffer);
                 //textArea.setText(buffer);
                 fin.close();
                 statusField.setText("Load " + chooser.getSelectedFile().getAbsolutePath());
