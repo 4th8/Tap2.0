@@ -86,7 +86,7 @@ public class dbQuery {
     }
     public ResultSet getAllTemp(){
         
-            String All_Location_Field = "SELECT * FROM temperature;";
+            String All_Location_Field = "SELECT * FROM temperature ;";
             ResultSet result = null;
         try {    
             database.executeSelect(All_Location_Field);
