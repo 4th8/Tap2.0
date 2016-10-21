@@ -30,7 +30,7 @@ public class ImportDataFile {
     /**
      * Default Constructor
      *
-     * @param filename Filename of the .xlsx file.
+     * @param filename Filename of the .csv file.
      * @param db dbQueary object. An interface with the database.
      */
     ImportDataFile(String filename, dbQuery db) {

@@ -5,6 +5,11 @@
  */
 package tap2.pkg0;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Usman
@@ -13,37 +18,72 @@ public class dbQuery {
 
     //private String All_Location_Field;
     //private String insertIntoLocation;
+    private db database;
 
-    dbQuery() {
+    public dbQuery(db database) {
+        this.database = database;
     }
 
     ;
     
-    public String insertLocation(String id, String name, String abb) {
+    public void insertLocation(String id, String name, String abb) {
         String insertIntoLocation = String.format("INSERT INTO location (location_id,full_name,abbreviation)VALUES ('%s', '%s', '%s');", id, name, abb);
-        return insertIntoLocation;
+        try {
+            database.executeInsert(insertIntoLocation);
+        } catch (SQLException ex) {
+            Logger.getLogger(dbQuery.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
-    public String insertTemperatureData(String timeStamp, int temp, String sn, String locationId){
+    public void insertTemperatureData(String timeStamp, double temp, String sn, String locationId){
         String insertTemperature = String.format("INSERT INTO temperature (time_stamp,degrees_c,sensor_serial,location_id)"
-                + " VALUES ('%s','%d','%s','%s');",timeStamp,temp,sn,locationId);
-        return insertTemperature;
+                + " VALUES ('%s','%f','%s','%s');",timeStamp,temp,sn,locationId);
+        try {
+            database.executeInsert(insertTemperature);
+        } catch (SQLException ex) {
+            Logger.getLogger(dbQuery.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
-    public String insertSensor(String sn, String abb){
-        String insertSensor=String.format("INSERT INTO sensor (sensor_serial, abbreviation)"
+    public void insertSensor(String sn, String abb){
+        String insertSensor = String.format("INSERT INTO sensor (sensor_serial, abbreviation)"
                 + "VALUES ('%s', '%s');",sn,abb);
-        return insertSensor;
+        try {
+            database.executeInsert(insertSensor);
+        } catch (SQLException ex) {
+            Logger.getLogger(dbQuery.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public String getLocationIdBySerialNumber(String SN) {
-        String getLocationId = String.format("select location.location_id from location INNER JOIN sensor ON (sensor.sensor_serial='%s' and sensor.abbreviation=location.abbreviation);", SN);
-        return getLocationId;
+        String ans = "";
+        try {
+            String getLocationId = String.format("select location.location_id from location INNER JOIN sensor ON (sensor.sensor_serial='%s' and sensor.abbreviation=location.abbreviation);", SN);
+            ResultSet result = database.executeSelect(getLocationId);
+            result.next();
+            ans = result.getString(1);
+        } catch (SQLException ex) {
+            Logger.getLogger(dbQuery.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        /*
+        Throw a no result execption here.
+        */
+        return ans;
     }
 
-    public String get_All_Location_Field() {
+    public ResultSet get_All_Location_Field() {
         String All_Location_Field = "SELECT * FROM location;";
-        return All_Location_Field;
+        ResultSet result = null;
+        try {
+            database.executeSelect(All_Location_Field);
+            result = database.executeSelect(All_Location_Field);
+        } catch (SQLException ex) {
+            Logger.getLogger(dbQuery.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        /*
+        Thow Exception here.
+        */
+        return result;
     }
 
 }

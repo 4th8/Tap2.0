@@ -18,7 +18,7 @@ public class db {
     private static Connection connection = null;
 
     public db() {
-
+        connectToDB();
     }
 
     public static void connectToDB() {
@@ -66,7 +66,6 @@ public class db {
       //String query = "select * from location;";
         //db test;
         //test=new db();
-        this.connectToDB();
         Statement st = null;
         ResultSet rs = null;
         st = connection.createStatement();
@@ -80,7 +79,6 @@ public class db {
       //String query = "select * from location;";
         //db test;
         //test=new db();
-        this.connectToDB();
         Statement st = null;
         //ResultSet rs=null;
         st = connection.createStatement();

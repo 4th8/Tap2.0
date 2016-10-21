@@ -6,6 +6,8 @@
 package GUI;
 
 import javax.swing.JFrame;
+import tap2.pkg0.db;
+import tap2.pkg0.dbQuery;
 
 /**
  *
@@ -13,7 +15,9 @@ import javax.swing.JFrame;
  */
 public class GuiStart {
      public static void main(String[] args) {
-        dataPage frame = new dataPage();
+        db database = new db();
+        dbQuery query = new dbQuery(database);
+        dataPage frame = new dataPage(query);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
