@@ -17,7 +17,7 @@ public class db {
     private String query;
     private static Connection connection = null;
 
-    db() {
+    public db() {
 
     }
 
