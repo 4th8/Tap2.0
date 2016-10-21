@@ -10,8 +10,11 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import tap2.pkg0.dbQuery;
 
 /**
  *
@@ -19,11 +22,14 @@ import javax.swing.JOptionPane;
  */
 public class dataPage extends javax.swing.JFrame {
 
+    private dbQuery query;
     /**
      * Creates new form dataPage
+     * @param query
      */
-    public dataPage() {
+    public dataPage(dbQuery query) {
         initComponents();
+        this.query = query;
     }
 
     //Location GUI=new Location();
@@ -227,15 +233,34 @@ public class dataPage extends javax.swing.JFrame {
 
     private void importButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importButtonActionPerformed
         JFileChooser chooser = new JFileChooser();
+        String serialNumber = "";
+        String locationID = "";
         int chooserValue = chooser.showOpenDialog(this);
         if (chooserValue == JFileChooser.APPROVE_OPTION) {
             try {
-                Scanner fin = new Scanner(chooser.getSelectedFile());
+                Scanner fin;
+                fin = new Scanner(chooser.getSelectedFile());
+                String filename = chooser.getSelectedFile().getName();
+                System.out.println("Filename: " + filename);
+                Pattern pattern = Pattern.compile("([0-9]{6})");
+                Matcher matcher = pattern.matcher(filename);
+                if (matcher.find()){
+                    serialNumber = (matcher.group(1));
+                    locationID = query.getLocationIdBySerialNumber(serialNumber);
+                }
+
+                fin.nextLine();
                 while(fin.hasNext()){
                     String rawline = fin.nextLine();
                     String [] line = rawline.split(",");
                     String timestamp = line[0];
-                    double temp = Double.parseDouble(line[1]);        
+                    double temp = Double.parseDouble(line[1]);
+                    try{
+                    query.insertTemperatureData(timestamp, temp, serialNumber, locationID);
+                    }catch(Exception e){
+                        break;
+                    }
+                    
                     
                 }
                 //textArea.setText(buffer);
