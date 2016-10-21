@@ -19,7 +19,7 @@ public class dbQuery {
     //private String All_Location_Field;
     //private String insertIntoLocation;
     private db database;
-
+    public static class NoLocationException extends Exception{};
     public dbQuery(db database) {
         this.database = database;
     }
@@ -34,7 +34,6 @@ public class dbQuery {
             Logger.getLogger(dbQuery.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
     public void insertTemperatureData(String timeStamp, double temp, String sn, String locationId){
         String insertTemperature = String.format("INSERT INTO temperature (time_stamp,degrees_c,sensor_serial,location_id)"
                 + " VALUES ('%s','%f','%s','%s');",timeStamp,temp,sn,locationId);
@@ -55,19 +54,19 @@ public class dbQuery {
         }
     }
 
-    public String getLocationIdBySerialNumber(String SN) {
+    public String getLocationIdBySerialNumber(String SN) throws NoLocationException {
         String ans = "";
         try {
             String getLocationId = String.format("select location.location_id from location INNER JOIN sensor ON (sensor.sensor_serial='%s' and sensor.abbreviation=location.abbreviation);", SN);
             ResultSet result = database.executeSelect(getLocationId);
             result.next();
             ans = result.getString(1);
-        } catch (SQLException ex) {
+        }catch (SQLException ex) {
             Logger.getLogger(dbQuery.class.getName()).log(Level.SEVERE, null, ex);
         }
-        /*
-        Throw a no result execption here.
-        */
+        if("".equals(ans)){
+            throw new NoLocationException();
+        }
         return ans;
     }
 
@@ -85,5 +84,21 @@ public class dbQuery {
         */
         return result;
     }
+    public ResultSet getAllTemp(){
+        String All_Location_Field = "SELECT * FROM location;";
+        ResultSet result = null;
+        try {
+            database.executeSelect(All_Location_Field);
+            result = database.executeSelect(All_Location_Field);
+        } catch (SQLException ex) {
+            Logger.getLogger(dbQuery.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        /*
+        Thow Exception here.
+        */
+        return result;
+    }
+        
+    
 
 }
