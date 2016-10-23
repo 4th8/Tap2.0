@@ -53,6 +53,26 @@ public class dbQuery {
             Logger.getLogger(dbQuery.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    public void updateSensor (String oldSn, String newSn){
+        String updateSen = String.format(" UPDATE sensor SET sensor_serial ='%s' WHERE"
+                + " sensor_serial ='%s';",newSn,oldSn);
+        try {
+            database.executeInsert(updateSen);
+        } catch (SQLException ex) {
+            Logger.getLogger(dbQuery.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+     public void removeSensor (String sn){
+        String updateSen = String.format("UPDATE sensor SET sensor_serial ='' WHERE "
+                + "sensor_serial ='%s';",sn);
+        try {
+            database.executeInsert(updateSen);
+        } catch (SQLException ex) {
+            Logger.getLogger(dbQuery.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
 
     public String getLocationIdBySerialNumber(String SN) throws NoLocationException {
         String ans = "";
