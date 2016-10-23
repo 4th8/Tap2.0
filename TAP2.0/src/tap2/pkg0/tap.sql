@@ -35,3 +35,5 @@ Grant all on sensor to postgres;
 Grant all on temperature to postgres;
 Grant all on temperature_temp_id_seq to postgres;
 ALTER USER postgres WITH PASSWORD 'suk';
+--SELECT degrees_c, time_stamp FROM temperature WHERE time_stamp BETWEEN '2014-09-04 10:00:00.0' AND '2014-09-05 00:00:00.0';--
+--SELECT AVG(degrees_c) FROM temperature;--
