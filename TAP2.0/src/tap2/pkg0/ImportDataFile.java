@@ -8,10 +8,6 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  * Reads in the .csv file and adds the data to the database. Will automatically
@@ -36,7 +32,6 @@ public class ImportDataFile {
     ImportDataFile(String filename, dbQuery db) {
         this.filename = filename;
         this.db = db;
-        execute();
     }
 
     /**
@@ -44,36 +39,5 @@ public class ImportDataFile {
      *
      * @author Nathan
      */
-    private void execute() {
-        try {
-
-            XSSFWorkbook workbook = new XSSFWorkbook(filename);
-            XSSFSheet sheet = workbook.getSheetAt(0);
-            Iterator<Row> rowIterator = sheet.iterator();
-
-            while (rowIterator.hasNext()) {
-
-                Row row = rowIterator.next();
-                Iterator<Cell> cellIterator = row.cellIterator();
-                while (cellIterator.hasNext()) {
-                    Cell cell = cellIterator.next();
-                    //Check the cell type and format accordingly
-                    switch (cell.getCellType()) {
-                        case Cell.CELL_TYPE_NUMERIC:
-                            System.out.print(cell.getNumericCellValue() + "t");
-                            break;
-                        case Cell.CELL_TYPE_STRING:
-                            System.out.print(cell.getStringCellValue() + "t");
-                            break;
-                    }
-                }
-            }
-            System.out.println("");
-        }
-        catch (IOException ex) {
-            Logger.getLogger(ImportDataFile.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
 
 }
