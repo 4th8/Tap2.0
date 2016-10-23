@@ -15,6 +15,8 @@ import java.util.regex.Pattern;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import tap2.pkg0.dbQuery;
 
 /**
@@ -30,10 +32,39 @@ public class dataPage extends javax.swing.JFrame {
      * @param query
      */
     public dataPage(dbQuery query) {
-        initComponents();
         this.query = query;
+        ResultSet set = query.getAllTemp();
+        updateResults(set);
+        initComponents();
     }
+    private void updateResults(ResultSet set){
+        try {
+            ResultSetMetaData metaData = set.getMetaData();
+            int numberOfColumns = metaData.getColumnCount();
+            Vector columnNames = new Vector();
 
+            // Get the column names
+            for (int column = 0; column < numberOfColumns; column++) {
+                columnNames.addElement(metaData.getColumnLabel(column + 1));
+            }
+
+            // Get all rows.
+            Vector rows = new Vector();
+
+            while (set.next()) {
+                Vector newRow = new Vector();
+
+                for (int i = 1; i <= numberOfColumns; i++) {
+                    newRow.addElement(set.getObject(i));
+                }
+
+                rows.addElement(newRow);
+            }
+
+            results = new DefaultTableModel(rows, columnNames);
+        } catch (SQLException e) {
+        }
+    }
     //Location GUI=new Location();
     /**
      * This method is called from within the constructor to initialize the form.
@@ -43,7 +74,6 @@ public class dataPage extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         tapPUEntityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("tapPU").createEntityManager();
         locationQuery = java.beans.Beans.isDesignTime() ? null : tapPUEntityManager.createQuery("SELECT l FROM Location l");
@@ -112,21 +142,10 @@ public class dataPage extends javax.swing.JFrame {
             }
         });
 
-        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, locationList, jTable1);
-        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${fullName}"));
-        columnBinding.setColumnName("Full Name");
-        columnBinding.setColumnClass(String.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${abbreviation}"));
-        columnBinding.setColumnName("Abbreviation");
-        columnBinding.setColumnClass(String.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${locationId}"));
-        columnBinding.setColumnName("Location Id");
-        columnBinding.setColumnClass(String.class);
-        jTableBinding.setSourceNullValue(locationList);
-        jTableBinding.setSourceUnreadableValue(locationList);
-        bindingGroup.addBinding(jTableBinding);
-        jTableBinding.bind();
+        jTable1.setAutoCreateRowSorter(true);
+        jTable1.setModel(results);
         jScrollPane1.setViewportView(jTable1);
+        jTable1.getAccessibleContext().setAccessibleParent(jTable1);
 
         javax.swing.GroupLayout rawPanel2Layout = new javax.swing.GroupLayout(rawPanel2);
         rawPanel2.setLayout(rawPanel2Layout);
@@ -222,8 +241,6 @@ public class dataPage extends javax.swing.JFrame {
                 .addComponent(jTabbedPane2)
                 .addContainerGap())
         );
-
-        bindingGroup.bind();
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -338,6 +355,6 @@ public class dataPage extends javax.swing.JFrame {
     private javax.swing.JPanel rawPanel2;
     private javax.swing.JTextField statusField;
     private javax.persistence.EntityManager tapPUEntityManager;
-    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
+    private TableModel results;
 }
