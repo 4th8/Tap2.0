@@ -74,6 +74,7 @@ public class dbQuery {
         
     }
 
+    
     public String getLocationIdBySerialNumber(String SN) throws NoLocationException {
         String ans = "";
         try {
@@ -106,7 +107,7 @@ public class dbQuery {
     }
     public ResultSet getAllTemp(){
         
-            String All_Location_Field = "SELECT * FROM temperature ;";
+            String All_Location_Field = "SELECT temperature.time_stamp, temperature.degrees_c, location.abbreviation FROM temperature, location;";
             ResultSet result = null;
         try {    
             database.executeSelect(All_Location_Field);
