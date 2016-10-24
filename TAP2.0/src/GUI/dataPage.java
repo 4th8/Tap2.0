@@ -335,10 +335,7 @@ public class dataPage extends javax.swing.JFrame {
             query.insertLocation(sensorSerialNumber.getText(),fullName.getText(), abb.getText());
       }
     }
-    private void addSensor(String serialNumber){
-        String locationName = "";
-        String abv = "";
-        
+    private void addSensor(String serialNumber){        
         JTextField fullName = new JTextField(255);
         JTextField abb = new JTextField(3);
         
@@ -348,12 +345,11 @@ public class dataPage extends javax.swing.JFrame {
         myPanel.add(fullName);
         myPanel.add(new JLabel("Location abbreviation:"));
         myPanel.add(abb);
-        query.insertSensor(serialNumber, abv);
-        
-        
-        /*
-        Finish This...
-        */
+        int result = JOptionPane.showConfirmDialog(null, myPanel, 
+               "Please fill out the form.", JOptionPane.OK_CANCEL_OPTION);
+        if (result == JOptionPane.OK_OPTION) {
+            query.insertLocation(serialNumber,fullName.getText(), abb.getText());
+        }
     }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         JFileChooser chooser = new JFileChooser();
