@@ -39,12 +39,21 @@ public class dataPage extends javax.swing.JFrame {
      */
     public dataPage(dbQuery query) {
         this.query = query;
-        ResultSet set = query.getAllTemp();
-        updateResults(set);
+        updateResults();
         initComponents();
     }
-    private void updateResults(ResultSet set){
+    /*
+    This should allow the user to sort the results shown on the screen.
+    It will 
+    */
+    private void updateResults(){
         try {
+            
+            
+            /*
+            import praram here
+            */
+            ResultSet set = query.getAllTemp();// use the select query
             ResultSetMetaData metaData = set.getMetaData();
             int numberOfColumns = metaData.getColumnCount();
             Vector columnNames = new Vector();
@@ -70,6 +79,12 @@ public class dataPage extends javax.swing.JFrame {
             results = new DefaultTableModel(rows, columnNames);
         } catch (SQLException e) {
         }
+        try{
+        jTable1.setModel(results);
+        }catch(NullPointerException ex){
+            ;
+        }
+        
     }
     //Location GUI=new Location();
     /**
@@ -340,6 +355,7 @@ public class dataPage extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "File not found!");
             }
         }
+        updateResults();
     }
     private void addSensor(){    
         JTextField fullName = new JTextField(5);
@@ -374,6 +390,7 @@ public class dataPage extends javax.swing.JFrame {
         if (result == JOptionPane.OK_OPTION) {
             query.insertLocation(serialNumber,fullName.getText(), abb.getText());
         }
+        updateResults();
     }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         JFileChooser chooser = new JFileChooser();
@@ -394,10 +411,13 @@ public class dataPage extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         addSensor();
+        updateResults();
+        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         query.CLEAR();
+        updateResults();
     }//GEN-LAST:event_jButton3ActionPerformed
     private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // textArea.setText("");
