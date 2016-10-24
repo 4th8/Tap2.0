@@ -100,6 +100,8 @@ public class dataPage extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -153,14 +155,24 @@ public class dataPage extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTable1);
         jTable1.getAccessibleContext().setAccessibleParent(jTable1);
 
+        jButton2.setText("jButton2");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton3.setText("CLEAR DATABASE");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout rawPanel2Layout = new javax.swing.GroupLayout(rawPanel2);
         rawPanel2.setLayout(rawPanel2Layout);
         rawPanel2Layout.setHorizontalGroup(
             rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(rawPanel2Layout.createSequentialGroup()
-                .addGap(477, 477, 477)
-                .addComponent(jLabel22)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rawPanel2Layout.createSequentialGroup()
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rawPanel2Layout.createSequentialGroup()
@@ -201,12 +213,22 @@ public class dataPage extends javax.swing.JFrame {
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 826, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(215, 215, 215))
+            .addGroup(rawPanel2Layout.createSequentialGroup()
+                .addGap(39, 39, 39)
+                .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton3)
+                    .addComponent(jButton2))
+                .addGap(365, 365, 365)
+                .addComponent(jLabel22)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         rawPanel2Layout.setVerticalGroup(
             rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rawPanel2Layout.createSequentialGroup()
                 .addGap(17, 17, 17)
-                .addComponent(jLabel22)
+                .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel22)
+                    .addComponent(jButton2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel24)
@@ -218,13 +240,14 @@ public class dataPage extends javax.swing.JFrame {
                     .addComponent(qrdYears1)
                     .addComponent(qrdMonths1)
                     .addComponent(qrdDays1)
-                    .addComponent(qrdHours1))
-                .addGap(40, 40, 40)
+                    .addComponent(qrdHours1)
+                    .addComponent(jButton3))
+                .addGap(35, 35, 35)
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(importButton)
                     .addComponent(statusField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -284,11 +307,12 @@ public class dataPage extends javax.swing.JFrame {
                 Matcher matcher = pattern.matcher(filename);
                 if (matcher.find()){
                     serialNumber = (matcher.group(1));
-                    try {
-                        locationID = query.getLocationIdBySerialNumber(serialNumber);
-                    } catch (dbQuery.NoLocationException ex) {
-                       
-                                                
+                    while (locationID.equals("")){
+                        try {
+                            locationID = query.getLocationIdBySerialNumber(serialNumber);
+                        } catch (dbQuery.NoLocationException ex) {
+                            addSensor(serialNumber);
+                        }
                     }
                 }
                 else{
@@ -303,11 +327,9 @@ public class dataPage extends javax.swing.JFrame {
                     double temp = Double.parseDouble(line[1]);
                     try{
                     query.insertTemperatureData(timestamp, temp, serialNumber, locationID);
-                    }catch(Exception e){
-                        break;
+                    }catch(SQLException ex){
+                        continue;
                     }
-                    
-                    
                 }
                 //textArea.setText(buffer);
                 fin.close();
@@ -318,7 +340,7 @@ public class dataPage extends javax.swing.JFrame {
         }
     }
     private void addSensor(){    
-        JTextField fullName = new JTextField(255);
+        JTextField fullName = new JTextField(5);
         JTextField abb = new JTextField(3);
         JTextField sensorSerialNumber = new JTextField(6);
         
@@ -336,7 +358,7 @@ public class dataPage extends javax.swing.JFrame {
       }
     }
     private void addSensor(String serialNumber){        
-        JTextField fullName = new JTextField(255);
+        JTextField fullName = new JTextField(5);
         JTextField abb = new JTextField(3);
         
         
@@ -367,6 +389,14 @@ public class dataPage extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        addSensor();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        query.CLEAR();
+    }//GEN-LAST:event_jButton3ActionPerformed
     private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // textArea.setText("");
         // statusField.setText("New file");
@@ -374,6 +404,8 @@ public class dataPage extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton importButton;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel26;
