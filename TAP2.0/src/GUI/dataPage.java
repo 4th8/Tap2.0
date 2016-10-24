@@ -17,8 +17,10 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import tap2.pkg0.dbQuery;
@@ -285,11 +287,8 @@ public class dataPage extends javax.swing.JFrame {
                     try {
                         locationID = query.getLocationIdBySerialNumber(serialNumber);
                     } catch (dbQuery.NoLocationException ex) {
-                        /*
-                        Add new location()
-                        */
-                        System.exit(-1);//Remove this...!!!
-                        
+                       
+                                                
                     }
                 }
                 else{
@@ -317,6 +316,44 @@ public class dataPage extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "File not found!");
             }
         }
+    }
+    private void addSensor(){    
+        JTextField fullName = new JTextField(255);
+        JTextField abb = new JTextField(3);
+        JTextField sensorSerialNumber = new JTextField(6);
+        
+        JPanel myPanel = new JPanel();
+        myPanel.add(new JLabel("Location Name:"));
+        myPanel.add(fullName);
+        myPanel.add(new JLabel("Location abbreviation:"));
+        myPanel.add(abb);
+        myPanel.add(new JLabel("Sensor Serial Number:"));
+        myPanel.add(sensorSerialNumber);
+        int result = JOptionPane.showConfirmDialog(null, myPanel, 
+               "Please fill out the form.", JOptionPane.OK_CANCEL_OPTION);
+        if (result == JOptionPane.OK_OPTION) {
+            query.insertLocation(sensorSerialNumber.getText(),fullName.getText(), abb.getText());
+      }
+    }
+    private void addSensor(String serialNumber){
+        String locationName = "";
+        String abv = "";
+        
+        JTextField fullName = new JTextField(255);
+        JTextField abb = new JTextField(3);
+        
+        
+        JPanel myPanel = new JPanel();
+        myPanel.add(new JLabel("Location Name:"));
+        myPanel.add(fullName);
+        myPanel.add(new JLabel("Location abbreviation:"));
+        myPanel.add(abb);
+        query.insertSensor(serialNumber, abv);
+        
+        
+        /*
+        Finish This...
+        */
     }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         JFileChooser chooser = new JFileChooser();
