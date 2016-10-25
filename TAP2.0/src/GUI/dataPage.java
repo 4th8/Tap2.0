@@ -53,6 +53,10 @@ public class dataPage extends javax.swing.JFrame {
             /*
             import praram here
             */
+            /*
+            Code snippet adaped from http://technojeeves.com/index.php/22-resultset-to-tablemodel
+            
+            */
             ResultSet set = query.getAllTemp();// use the select query
             ResultSetMetaData metaData = set.getMetaData();
             int numberOfColumns = metaData.getColumnCount();
@@ -75,7 +79,9 @@ public class dataPage extends javax.swing.JFrame {
 
                 rows.addElement(newRow);
             }
-
+            /*
+            End Snippet
+            */
             results = new DefaultTableModel(rows, columnNames);
         } catch (SQLException e) {
         }
@@ -335,9 +341,14 @@ public class dataPage extends javax.swing.JFrame {
                 else{
                     throw new InvalidFilenameException();
                 }
-
-                fin.nextLine();
-                while(fin.hasNext()){
+                fin.reset();
+                if(fin.hasNextLine()){
+                    fin.nextLine();
+                }
+                else{
+                    System.out.println("You meesed up.\n"+filename);
+                }
+               while(fin.hasNext()){
                     String rawline = fin.nextLine();
                     String [] line = rawline.split(",");
                     String timestamp = line[0];

@@ -21,9 +21,10 @@ temp_id serial,
 time_stamp timestamp,
 degrees_c float,
 sensor_serial text,
-location_id text,
+location_id int references location(location_id) ,
 PRIMARY KEY (time_stamp, sensor_serial)
 );
+
 
 
 Create Role postgres with login;

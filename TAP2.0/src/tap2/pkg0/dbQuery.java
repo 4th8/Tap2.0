@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.postgresql.util.PSQLException;
 
 /**
  *
@@ -26,22 +27,19 @@ public class dbQuery {
 
     ;
     
-    public void insertLocation(String id, String name, String abb) {
-        String insertIntoLocation = String.format("INSERT INTO location (location_id,full_name,abbreviation)VALUES ('%s', '%s', '%s');", id, name, abb);
+    public void insertLocation(String serialNumber, String name, String abb) {
+        String insertIntoLocation = String.format("INSERT INTO location (full_name,abbreviation)VALUES ('%s', '%s');", name, abb);
         try {
             database.executeInsert(insertIntoLocation);
+            insertSensor(serialNumber, abb);
         } catch (SQLException ex) {
             Logger.getLogger(dbQuery.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    public void insertTemperatureData(String timeStamp, double temp, String sn, String locationId){
+    public void insertTemperatureData(String timeStamp, double temp, String sn, String locationId) throws SQLException{
         String insertTemperature = String.format("INSERT INTO temperature (time_stamp,degrees_c,sensor_serial,location_id)"
                 + " VALUES ('%s','%f','%s','%s');",timeStamp,temp,sn,locationId);
-        try {
             database.executeInsert(insertTemperature);
-        } catch (SQLException ex) {
-            Logger.getLogger(dbQuery.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     
     public void insertSensor(String sn, String abb){
@@ -53,6 +51,7 @@ public class dbQuery {
             Logger.getLogger(dbQuery.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
     public void updateSensor (String oldSn, String newSn){
         String updateSen = String.format(" UPDATE sensor SET sensor_serial ='%s' WHERE"
                 + " sensor_serial ='%s';",newSn,oldSn);
@@ -83,14 +82,19 @@ public class dbQuery {
             result.next();
             ans = result.getString(1);
         }catch (SQLException ex) {
-            Logger.getLogger(dbQuery.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        if("".equals(ans)){
             throw new NoLocationException();
         }
         return ans;
     }
-
+    public void CLEAR(){
+        try {
+            database.executeInsert("DELETE FROM temperature;");
+            database.executeInsert("DELETE FROM location;");
+            database.executeInsert("DELETE FROM sensor;");
+        } catch (SQLException ex) {
+            Logger.getLogger(dbQuery.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     public ResultSet get_All_Location_Field() {
         String All_Location_Field = "SELECT * FROM location;";
         ResultSet result = null;
@@ -107,7 +111,7 @@ public class dbQuery {
     }
     public ResultSet getAllTemp(){
         
-            String All_Location_Field = "SELECT temperature.time_stamp, temperature.degrees_c, location.abbreviation FROM temperature, location;";
+            String All_Location_Field = "SELECT temperature.time_stamp, temperature.degrees_c, location.abbreviation FROM temperature JOIN location on temperature.location_id = location.location_id;";
             ResultSet result = null;
         try {    
             database.executeSelect(All_Location_Field);
