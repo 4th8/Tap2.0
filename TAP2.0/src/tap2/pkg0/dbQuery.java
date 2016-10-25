@@ -72,6 +72,14 @@ public class dbQuery {
         }
         
     }
+     public void deleteSensor(String sn){
+         String delSensor = String.format("DELETE from sensor WHERE sensor_serial = '%s'",sn);
+        try {
+            database.executeInsert(delSensor);
+        } catch (SQLException ex) {
+            Logger.getLogger(dbQuery.class.getName()).log(Level.SEVERE, null, ex);
+        }
+     }
 
     
     public String getLocationIdBySerialNumber(String SN) throws NoLocationException {
