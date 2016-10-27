@@ -46,7 +46,9 @@ INSERT INTO temperature (time_stamp,degrees_c,sensor_serial,location_id) VALUES 
 INSERT INTO temperature (time_stamp,degrees_c,sensor_serial,location_id) VALUES ('2014-08-04 10:00:00.2',50,'32',1);
 INSERT INTO temperature (time_stamp,degrees_c,sensor_serial,location_id) VALUES ('2014-02-04 10:00:00.1',1,'32',1);
 */
+
 --WITH temperature(value) AS (SELECT degrees_c from temperature)SELECT avg(value) AS "Average",min(value),max(value),stddev(value),percentile_cont(0.25) WITHIN GROUP (ORDER BY value) AS "Q1",percentile_cont(0.50) WITHIN GROUP (ORDER BY value) AS "Q2",percentile_cont(0.75) WITHIN GROUP (ORDER BY value) AS "Q3" FROM temperature;
+--
 
 WITH temperature(value) AS (
   SELECT degrees_c from temperature

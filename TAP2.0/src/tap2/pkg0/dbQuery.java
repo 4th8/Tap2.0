@@ -136,7 +136,16 @@ public class dbQuery {
     }
     public ResultSet getStats(){
         
-            String All_Location_Field = "WITH temperature(value) AS (SELECT degrees_c from temperature)SELECT avg(value) AS \"Average\",min(value),max(value),stddev(value),percentile_cont(0.25) WITHIN GROUP (ORDER BY value) AS \"Q1\",percentile_cont(0.50) WITHIN GROUP (ORDER BY value) AS \"Q2\",percentile_cont(0.75) WITHIN GROUP (ORDER BY value) AS \"Q3\" FROM temperature;";
+            String All_Location_Field = "WITH temperature(value) "
+                    + "AS (SELECT degrees_c from temperature)"
+                    + "SELECT avg(value) AS \"Average\",min(value),max(value),"
+                    + "stddev(value),percentile_cont(0.25) WITHIN GROUP (ORDER BY value) AS"
+                    + " \"Q1\",percentile_cont(0.50) "
+                    + "WITHIN GROUP (ORDER BY value) AS "
+                    + "\"Q2\",percentile_cont(0.75) "
+                    + "WITHIN GROUP (ORDER BY value) AS \"Q3\" "
+                    + ""
+                    + "FROM temperature;";
             ResultSet result = null;
         try {    
             database.executeSelect(All_Location_Field);
