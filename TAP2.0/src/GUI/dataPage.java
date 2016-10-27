@@ -330,6 +330,7 @@ public class dataPage extends javax.swing.JFrame {
         JFileChooser chooser = new JFileChooser();
         String serialNumber = "";
         String locationID = "";
+        int num = 0;
         int chooserValue = chooser.showOpenDialog(this);
         if (chooserValue == JFileChooser.APPROVE_OPTION) {
             try {
@@ -368,6 +369,7 @@ public class dataPage extends javax.swing.JFrame {
                     double temp = Double.parseDouble(line[1]);
                     try{
                     query.insertTemperatureData(timestamp, temp, serialNumber, locationID);
+                    num++;
                     }catch(SQLException ex){
                         continue;
                     }
@@ -379,6 +381,11 @@ public class dataPage extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "File not found!");
             }
         }
+        String message = Integer.toString(num) + " temperatures added.";
+        if(num == 0){
+            message = "File has already been added to the database.";
+        }
+        JOptionPane.showMessageDialog(this, message);
         updateResults();
     }
     private void addSensor(){    
