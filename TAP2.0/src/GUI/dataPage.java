@@ -323,6 +323,7 @@ public class dataPage extends javax.swing.JFrame {
                 Scanner fin;
                 fin = new Scanner(chooser.getSelectedFile());
                 String filename = chooser.getSelectedFile().getName();
+                System.out.println(chooser.getSelectedFile().getPath());
                 if(!filename.endsWith(".csv")){
                     throw new NotCSVException();
                 }
@@ -341,7 +342,6 @@ public class dataPage extends javax.swing.JFrame {
                 else{
                     throw new InvalidFilenameException();
                 }
-                fin.reset();
                 if(fin.hasNextLine()){
                     fin.nextLine();
                 }
