@@ -11,7 +11,7 @@ import tap2.pkg0.dbQuery;
 
 /**
  *
- * @author marc
+ * @author marcelo
  */
 public class GuiStart {
      public static void main(String[] args) {
