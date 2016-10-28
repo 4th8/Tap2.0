@@ -26,6 +26,14 @@ PRIMARY KEY (time_stamp, sensor_serial)
 );
 
 
+CREATE TABLE defaultSave(
+kind text,
+filepath text,
+PRIMARY KEY (kind)
+);
+INSERT INTO defaultSave (kind, filepath) VALUES ('import','');
+INSERT INTO defaultSave (kind, filepath) VALUES ('export','');
+
 
 Create Role postgres with login;
 Grant all on location to postgres;

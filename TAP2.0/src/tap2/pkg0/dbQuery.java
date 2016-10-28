@@ -21,6 +21,8 @@ public class dbQuery {
     //private String insertIntoLocation;
     private db database;
     public static class NoLocationException extends Exception{};
+    public static class noImportLocationException extends Exception{};
+    public static class noExportLocationException extends Exception{};
     public dbQuery(db database) {
         this.database = database;
     }
@@ -62,6 +64,67 @@ public class dbQuery {
         }
         
     }
+    
+    
+    
+    public void updateExportLocation(String location){
+        String query = String.format("UPDATE filepath SET filepath = '%s' WHERE kind = 'export';",location);
+        try {
+            database.executeInsert(query);
+        } catch (SQLException ex) {
+            Logger.getLogger(dbQuery.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public String getExportLocation() throws noExportLocationException{
+        String query = "SELECT filepath FROM defaultSave WHERE kind = 'export';";
+        String ans = null;
+        ResultSet result = null;
+        try {
+            result  = database.executeSelect(query);
+            result.next();
+            ans = result.getString(1);
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(dbQuery.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if(ans == null){
+            throw new noExportLocationException();
+        }
+            
+        return ans;
+    }
+    
+    
+    
+    
+    public void updateImportLocation(String location){
+        String query = String.format("UPDATE defaultSave SET filepath = '%s' WHERE kind = 'import';",location);
+        try {
+            database.executeInsert(query);
+        } catch (SQLException ex) {
+            Logger.getLogger(dbQuery.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public String getImportLocation() throws noImportLocationException{
+        String getimport = "SELECT filepath FROM defaultSave WHERE kind = 'import';";
+        String ans = null;
+        ResultSet result = null;
+        try {
+            result  = database.executeSelect(getimport);
+            result.next();
+            ans = result.getString(1);
+            System.out.println("query ans: " + ans);
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(dbQuery.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if(ans == null){
+            throw new noImportLocationException();
+        }
+            
+        return ans;
+    }
+    
      public void removeSensor (String sn){
         String updateSen = String.format("UPDATE sensor SET sensor_serial ='' WHERE "
                 + "sensor_serial ='%s';",sn);

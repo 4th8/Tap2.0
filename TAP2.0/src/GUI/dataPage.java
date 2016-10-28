@@ -48,6 +48,12 @@ public class dataPage extends javax.swing.JFrame {
      */
     public dataPage(dbQuery query) {
         this.query = query;
+        try {
+            this.importDefaultLocation = query.getImportLocation();
+            System.out.println(this.importDefaultLocation);
+        } catch (dbQuery.noImportLocationException ex) {
+            this.importDefaultLocation = null;
+        }
         updateResults();
         initComponents();
     }
@@ -392,6 +398,7 @@ public class dataPage extends javax.swing.JFrame {
                 //textArea.setText(buffer);
                 fin.close();
                 this.importDefaultLocation = chooser.getSelectedFile().getParent();
+                query.updateImportLocation(this.importDefaultLocation);
                 statusField.setText("Load " + chooser.getSelectedFile().getAbsolutePath());
             } catch (FileNotFoundException ex) {
                 JOptionPane.showMessageDialog(this, "File not found!");
