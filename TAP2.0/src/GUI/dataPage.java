@@ -6,6 +6,7 @@
 package GUI;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -40,6 +41,7 @@ public class dataPage extends javax.swing.JFrame {
     static class InvalidFilenameException extends Exception{};
     static class NotCSVException extends Exception{};
     private dbQuery query;
+    private String importDefaultLocation;
     /**
      * Creates new form dataPage
      * @param query
@@ -335,12 +337,18 @@ public class dataPage extends javax.swing.JFrame {
     }//GEN-LAST:event_importButtonActionPerformed
     private void importFile()throws InvalidFilenameException, NotCSVException{
         JFileChooser chooser = new JFileChooser();
+        boolean fileChosen = false;
+        if(this.importDefaultLocation != null){
+            File currentDir = new File(this.importDefaultLocation);
+            chooser.setCurrentDirectory(currentDir);
+        }
         String serialNumber = "";
         String locationID = "";
         int num = 0;
         int chooserValue = chooser.showOpenDialog(this);
         if (chooserValue == JFileChooser.APPROVE_OPTION) {
             try {
+                fileChosen = true;
                 Scanner fin;
                 fin = new Scanner(chooser.getSelectedFile());
                 String filename = chooser.getSelectedFile().getName();
@@ -383,16 +391,22 @@ public class dataPage extends javax.swing.JFrame {
                 }
                 //textArea.setText(buffer);
                 fin.close();
+                this.importDefaultLocation = chooser.getSelectedFile().getParent();
                 statusField.setText("Load " + chooser.getSelectedFile().getAbsolutePath());
             } catch (FileNotFoundException ex) {
                 JOptionPane.showMessageDialog(this, "File not found!");
             }
         }
-        String message = Integer.toString(num) + " temperatures added.";
-        if(num == 0){
-            message = "File has already been added to the database.";
+        String message;
+        if(fileChosen && num > 0){
+            message = Integer.toString(num) + " temperatures added.";
+            JOptionPane.showMessageDialog(this, message);
         }
-        JOptionPane.showMessageDialog(this, message);
+        if(num == 0 && fileChosen){
+            message = "File has already been added to the database.";
+            JOptionPane.showMessageDialog(this, message);
+        }
+        
         updateResults();
     }
     private void addSensor(){    
