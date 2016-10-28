@@ -1,25 +1,17 @@
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
- * and open the template in the editor
+ * and open the template in the editor.
  */
 package GUI;
 
-import java.awt.event.ActionEvent;
-import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Scanner;
 import java.util.Vector;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -94,7 +86,7 @@ public class dataPage extends javax.swing.JFrame {
         } catch (SQLException e) {
         }
         try{
-        rawTable.setModel(results);
+        jTable1.setModel(results);
         }catch(NullPointerException ex){
             ;
         }
@@ -338,12 +330,14 @@ public class dataPage extends javax.swing.JFrame {
         JFileChooser chooser = new JFileChooser();
         String serialNumber = "";
         String locationID = "";
+        int num = 0;
         int chooserValue = chooser.showOpenDialog(this);
         if (chooserValue == JFileChooser.APPROVE_OPTION) {
             try {
                 Scanner fin;
                 fin = new Scanner(chooser.getSelectedFile());
                 String filename = chooser.getSelectedFile().getName();
+                System.out.println(chooser.getSelectedFile().getPath());
                 if(!filename.endsWith(".csv")){
                     throw new NotCSVException();
                 }
@@ -362,19 +356,20 @@ public class dataPage extends javax.swing.JFrame {
                 else{
                     throw new InvalidFilenameException();
                 }
-                //fin.reset();
-                fin.nextLine();
-                //fin.nextLine();
-               
+                if(fin.hasNextLine()){
+                    fin.nextLine();
+                }
+                else{
+                    System.out.println("You meesed up.\n"+filename);
+                }
                while(fin.hasNext()){
-                   // fin.nextLine();
-                    
                     String rawline = fin.nextLine();
                     String [] line = rawline.split(",");
                     String timestamp = line[0];
                     double temp = Double.parseDouble(line[1]);
                     try{
                     query.insertTemperatureData(timestamp, temp, serialNumber, locationID);
+                    num++;
                     }catch(SQLException ex){
                         continue;
                     }
@@ -386,6 +381,11 @@ public class dataPage extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "File not found!");
             }
         }
+        String message = Integer.toString(num) + " temperatures added.";
+        if(num == 0){
+            message = "File has already been added to the database.";
+        }
+        JOptionPane.showMessageDialog(this, message);
         updateResults();
     }
     private void addSensor(){    
@@ -423,56 +423,38 @@ public class dataPage extends javax.swing.JFrame {
         }
         updateResults();
     }
-    private void exportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportButtonActionPerformed
-        try {                                             
-            JFileChooser chooser = new JFileChooser();
-            int chooserValue = chooser.showSaveDialog(this);
-            if (chooserValue == JFileChooser.APPROVE_OPTION) {
-         
-           
-                    statusField.setText("Saved " + chooser.getSelectedFile().getAbsolutePath());
-                
-               
-            }
-            Writer writer = null;
-            DefaultTableModel dtm = (DefaultTableModel) rawTable.getModel();
-            int nRow = dtm.getRowCount();
-            int nCol = dtm.getColumnCount();
-            try {
-                writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(chooser.getSelectedFile().getAbsolutePath()+".csv"), "UTF-8"));
-                
-                //write the header information
-                StringBuffer bufferHeader = new StringBuffer();
-                for (int j = 0; j < nCol; j++) {
-                    bufferHeader.append(dtm.getColumnName(j));
-                    if (j!=nCol) bufferHeader.append(", ");
-                }
-                writer.write(bufferHeader.toString() + "\r\n");
-                
-                //write row information
-                for (int i = 0 ; i < nRow ; i++){
-                    StringBuffer buffer = new StringBuffer();
-                    for (int j = 0 ; j < nCol ; j++){
-                        buffer.append(dtm.getValueAt(i,j));
-                        if (j!=nCol) buffer.append(", ");
-                    }
-                    writer.write(buffer.toString() + "\r\n");
-                }
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(dataPage.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (UnsupportedEncodingException ex) {
-                Logger.getLogger(dataPage.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(dataPage.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-            writer.close();
-            JOptionPane.showMessageDialog(this, "File was Exported Correctly");
-        } catch (IOException ex) {
-            Logger.getLogger(dataPage.class.getName()).log(Level.SEVERE, null, ex);
+    private void removeSensor(){
+       JTextField serialNumberInput = new JTextField(8);
+       
+       JPanel serialPanel = new JPanel();
+       serialPanel.add(new JLabel("Serial Number"));
+       serialPanel.add(serialNumberInput);
+       
+       int result = JOptionPane.showConfirmDialog(null, serialPanel, 
+               "Please fill out the form.", JOptionPane.OK_CANCEL_OPTION);
+        if (result == JOptionPane.OK_OPTION) {
+            query.deleteSensor(serialNumberInput.getText());
         }
        
-    }//GEN-LAST:event_exportButtonActionPerformed
+       
+
+    }
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        JFileChooser chooser = new JFileChooser();
+        int chooserValue = chooser.showSaveDialog(this);
+        if (chooserValue == JFileChooser.APPROVE_OPTION) {
+            try {
+                PrintWriter fout = new PrintWriter(chooser.getSelectedFile());
+                //fout.print(textArea.getText());
+                fout.close();
+
+                statusField.setText("Saved " + chooser.getSelectedFile().getAbsolutePath());
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(dataPage.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         addSensor();
@@ -485,35 +467,10 @@ public class dataPage extends javax.swing.JFrame {
         updateResults();
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        JTextField serialNumber = new JTextField(5);
-        JTextField abb = new JTextField(3);
-        JPanel myPanel = new JPanel();
-        myPanel.add(new JLabel("Sensor Serial"));
-        myPanel.add(serialNumber);
-        myPanel.add(new JLabel("Location abbreviation:"));
-        myPanel.add(abb);
-        int result = JOptionPane.showConfirmDialog(null, myPanel, 
-               "Please fill out the form.", JOptionPane.OK_CANCEL_OPTION);
-        if (result == JOptionPane.OK_OPTION) {
-            query.insertLocation(serialNumber,fullName.getText(), abb.getText());
-        }
-        query.removeSensor();
-        updateResults();
-    }
-    private void averageTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_averageTextFieldActionPerformed
-        // TODO add your handling code here:
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        removeSensor();
         
-      // averageTextField.setText("12");
-    }//GEN-LAST:event_averageTextFieldActionPerformed
-
-    private void averageTextFieldPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_averageTextFieldPropertyChange
-        // TODO add your handling code here:
-        averageTextField.setText("12");
-        
-       // averageTextField.setText("17");
-
-    }//GEN-LAST:event_averageTextFieldPropertyChange
+    }//GEN-LAST:event_jButton4ActionPerformed
     private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // textArea.setText("");
         // statusField.setText("New file");
