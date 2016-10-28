@@ -5,6 +5,8 @@
  */
 package GUI;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -16,6 +18,8 @@ import java.io.Writer;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
@@ -23,10 +27,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -210,6 +218,13 @@ public class dataPage extends javax.swing.JFrame {
         rawPanel2Layout.setHorizontalGroup(
             rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(rawPanel2Layout.createSequentialGroup()
+                .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.LEADING))
+                .addGap(365, 365, 365)
+                .addComponent(jLabel22)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(rawPanel2Layout.createSequentialGroup()
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rawPanel2Layout.createSequentialGroup()
                         .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -250,15 +265,8 @@ public class dataPage extends javax.swing.JFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 826, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(215, 215, 215))
             .addGroup(rawPanel2Layout.createSequentialGroup()
-                .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(rawPanel2Layout.createSequentialGroup()
-                        .addGap(51, 51, 51)
-                        .addComponent(jButton3))
-                    .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.Alignment.LEADING)))
-                .addGap(365, 365, 365)
-                .addComponent(jLabel22)
+                .addGap(51, 51, 51)
+                .addComponent(jButton3)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         rawPanel2Layout.setVerticalGroup(
@@ -292,7 +300,7 @@ public class dataPage extends javax.swing.JFrame {
                     .addComponent(exportButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(18, 18, 18))
         );
 
         jTabbedPane2.addTab("Raw Data", rawPanel2);
@@ -430,22 +438,53 @@ public class dataPage extends javax.swing.JFrame {
         }
         updateResults();
     }
-    private void removeSensor(){
-       JTextField serialNumberInput = new JTextField(8);
+    
+    private void removeSensor() throws SQLException{
+       
+       
        
        JPanel serialPanel = new JPanel();
-       serialPanel.add(new JLabel("Serial Number"));
-       serialPanel.add(serialNumberInput);
+       serialPanel.add(new JLabel("Select Serial Number"));
+       
+       ResultSet set = query.getSensorSerialNumber();
+       List<String> list = new ArrayList<String>();
+      
+       int count=0;
+       
+       while(set.next()){
+           list.add(set.getString(1));
+          
+       }
+      
+       String[] a=new String[list.size()];
+       while(count<list.size()){
+           a[count]=list.get(count);
+           
+           count++;
+       }
+//       System.out.print(list.get(1));
+       JComboBox<Object> jComboBox1 = new javax.swing.JComboBox<>();
+
+       
+      
+       jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(a));
+       serialPanel.add(jComboBox1);
        
        int result = JOptionPane.showConfirmDialog(null, serialPanel, 
                "Please fill out the form.", JOptionPane.OK_CANCEL_OPTION);
         if (result == JOptionPane.OK_OPTION) {
-            query.deleteSensor(serialNumberInput.getText());
-        }
-       
+            try{
+                System.out.print(jComboBox1.getSelectedItem());
+            
+                query.deleteSensor(jComboBox1.getSelectedItem().toString());
+            }catch(Exception e){
+                JOptionPane.showMessageDialog(this, "No Sensors to Remove");       
+            }
+       }
+   }
        
 
-    }
+    
     private void exportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportButtonActionPerformed
 
         try {                                             
@@ -511,7 +550,11 @@ public class dataPage extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        removeSensor();
+        try {
+            removeSensor();
+        } catch (SQLException ex) {
+            Logger.getLogger(dataPage.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }//GEN-LAST:event_jButton4ActionPerformed
     private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {
@@ -544,4 +587,10 @@ public class dataPage extends javax.swing.JFrame {
     private javax.persistence.EntityManager tapPUEntityManager;
     // End of variables declaration//GEN-END:variables
     private TableModel results;
+    
+    
+    private JLabel headerLabel;
+    private JLabel statusLabel;
+    private JPanel controlPanel;
+    
 }

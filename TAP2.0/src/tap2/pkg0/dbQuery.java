@@ -72,6 +72,17 @@ public class dbQuery {
         }
         
     }
+     public ResultSet getSensorSerialNumber(){
+         ResultSet results = null;
+         String sn="SELECT sensor_serial FROM sensor;";
+        try {
+            results=database.executeSelect(sn);
+        } catch (SQLException ex) {
+            Logger.getLogger(dbQuery.class.getName()).log(Level.SEVERE, null, ex);
+        }
+         return results;
+           
+         }
      public void deleteSensor(String sn){
          String delSensor = String.format("DELETE from sensor WHERE sensor_serial = '%s'",sn);
         try {
