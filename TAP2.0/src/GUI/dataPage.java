@@ -5,13 +5,20 @@
  */
 package GUI;
 
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Scanner;
 import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -86,7 +93,7 @@ public class dataPage extends javax.swing.JFrame {
         } catch (SQLException e) {
         }
         try{
-        jTable1.setModel(results);
+        rawTable.setModel(results);
         }catch(NullPointerException ex){
             ;
         }
@@ -118,9 +125,9 @@ public class dataPage extends javax.swing.JFrame {
         qrdHours1 = new javax.swing.JLabel();
         importButton = new javax.swing.JButton();
         statusField = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        exportButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        rawTable = new javax.swing.JTable();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
@@ -165,17 +172,17 @@ public class dataPage extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Export");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        exportButton.setText("Export");
+        exportButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                exportButtonActionPerformed(evt);
             }
         });
 
-        jTable1.setAutoCreateRowSorter(true);
-        jTable1.setModel(results);
-        jScrollPane1.setViewportView(jTable1);
-        jTable1.getAccessibleContext().setAccessibleParent(jTable1);
+        rawTable.setAutoCreateRowSorter(true);
+        rawTable.setModel(results);
+        jScrollPane1.setViewportView(rawTable);
+        rawTable.getAccessibleContext().setAccessibleParent(rawTable);
 
         jButton2.setText("Add Location/Sensor");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -210,7 +217,7 @@ public class dataPage extends javax.swing.JFrame {
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(importButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1))
+                                .addComponent(exportButton))
                             .addGroup(rawPanel2Layout.createSequentialGroup()
                                 .addGap(204, 204, 204)
                                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -282,7 +289,7 @@ public class dataPage extends javax.swing.JFrame {
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(importButton)
                     .addComponent(statusField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(exportButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -439,22 +446,58 @@ public class dataPage extends javax.swing.JFrame {
        
 
     }
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        JFileChooser chooser = new JFileChooser();
-        int chooserValue = chooser.showSaveDialog(this);
-        if (chooserValue == JFileChooser.APPROVE_OPTION) {
-            try {
-                PrintWriter fout = new PrintWriter(chooser.getSelectedFile());
-                //fout.print(textArea.getText());
-                fout.close();
+    private void exportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportButtonActionPerformed
 
-                statusField.setText("Saved " + chooser.getSelectedFile().getAbsolutePath());
+        try {                                             
+            JFileChooser chooser = new JFileChooser();
+            int chooserValue = chooser.showSaveDialog(this);
+            if (chooserValue == JFileChooser.APPROVE_OPTION) {
+         
+           
+                    statusField.setText("Saved " + chooser.getSelectedFile().getAbsolutePath());
+                
+               
+            }
+            Writer writer = null;
+            DefaultTableModel dtm = (DefaultTableModel) rawTable.getModel();
+            int nRow = dtm.getRowCount();
+            int nCol = dtm.getColumnCount();
+            try {
+                writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(chooser.getSelectedFile().getAbsolutePath()+".csv"), "UTF-8"));
+                
+                //write the header information
+                StringBuffer bufferHeader = new StringBuffer();
+                for (int j = 0; j < nCol; j++) {
+                    bufferHeader.append(dtm.getColumnName(j));
+                    if (j!=nCol) bufferHeader.append(", ");
+                }
+                writer.write(bufferHeader.toString() + "\r\n");
+                
+                //write row information
+                for (int i = 0 ; i < nRow ; i++){
+                    StringBuffer buffer = new StringBuffer();
+                    for (int j = 0 ; j < nCol ; j++){
+                        buffer.append(dtm.getValueAt(i,j));
+                        if (j!=nCol) buffer.append(", ");
+                    }
+                    writer.write(buffer.toString() + "\r\n");
+                }
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(dataPage.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(dataPage.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(dataPage.class.getName()).log(Level.SEVERE, null, ex);
             }
+            
+            writer.close();
+            JOptionPane.showMessageDialog(this, "File was Exported Correctly");
+        } catch (IOException ex) {
+            Logger.getLogger(dataPage.class.getName()).log(Level.SEVERE, null, ex);
         }
+       
 
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_exportButtonActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         addSensor();
@@ -476,8 +519,8 @@ public class dataPage extends javax.swing.JFrame {
         // statusField.setText("New file");
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton exportButton;
     private javax.swing.JButton importButton;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -489,7 +532,6 @@ public class dataPage extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
-    private javax.swing.JTable jTable1;
     private java.util.List<GUI.Location> locationList;
     private javax.persistence.Query locationQuery;
     private javax.swing.JLabel qrdDays1;
@@ -497,6 +539,7 @@ public class dataPage extends javax.swing.JFrame {
     private javax.swing.JLabel qrdMonths1;
     private javax.swing.JLabel qrdYears1;
     private javax.swing.JPanel rawPanel2;
+    private javax.swing.JTable rawTable;
     private javax.swing.JTextField statusField;
     private javax.persistence.EntityManager tapPUEntityManager;
     // End of variables declaration//GEN-END:variables
