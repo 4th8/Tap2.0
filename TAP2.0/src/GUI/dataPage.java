@@ -142,8 +142,7 @@ public class dataPage extends javax.swing.JFrame {
         tapPUEntityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("tapPU").createEntityManager();
         locationQuery = java.beans.Beans.isDesignTime() ? null : tapPUEntityManager.createQuery("SELECT l FROM Location l");
         locationList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : locationQuery.getResultList();
-        jTabbedPane2 = new javax.swing.JTabbedPane();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        graphTabbedPane = new javax.swing.JTabbedPane();
         rawPanel2 = new javax.swing.JPanel();
         jLabel22 = new javax.swing.JLabel();
         jLabel24 = new javax.swing.JLabel();
@@ -169,10 +168,9 @@ public class dataPage extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         updateSensorButton = new javax.swing.JButton();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jTabbedPane2.addTab("Graph", jTabbedPane1);
 
         jLabel22.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         jLabel22.setText("Raw Data");
@@ -383,7 +381,8 @@ public class dataPage extends javax.swing.JFrame {
                 .addGap(18, 18, 18))
         );
 
-        jTabbedPane2.addTab("Raw Data", rawPanel2);
+        graphTabbedPane.addTab("Raw Data", rawPanel2);
+        graphTabbedPane.addTab("Graph", jTabbedPane1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -391,13 +390,13 @@ public class dataPage extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1149, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(graphTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 1149, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane2)
+                .addComponent(graphTabbedPane)
                 .addContainerGap())
         );
 
@@ -714,6 +713,7 @@ public class dataPage extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton exportButton;
+    private javax.swing.JTabbedPane graphTabbedPane;
     private javax.swing.JButton importButton;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -731,7 +731,6 @@ public class dataPage extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel73;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTabbedPane jTabbedPane2;
     private java.util.List<GUI.Location> locationList;
     private javax.persistence.Query locationQuery;
     private javax.swing.JLabel qrdDays1;

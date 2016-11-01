@@ -50,7 +50,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="32767" attributes="0"/>
-              <Component id="jTabbedPane2" min="-2" pref="1149" max="-2" attributes="0"/>
+              <Component id="graphTabbedPane" min="-2" pref="1149" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -58,28 +58,17 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jTabbedPane2" max="32767" attributes="0"/>
+              <Component id="graphTabbedPane" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="javax.swing.JTabbedPane" name="jTabbedPane2">
+    <Container class="javax.swing.JTabbedPane" name="graphTabbedPane">
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
       <SubComponents>
-        <Container class="javax.swing.JTabbedPane" name="jTabbedPane1">
-          <Constraints>
-            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Graph">
-                <Property name="tabTitle" type="java.lang.String" value="Graph"/>
-              </JTabbedPaneConstraints>
-            </Constraint>
-          </Constraints>
-
-          <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
-        </Container>
         <Container class="javax.swing.JPanel" name="rawPanel2">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
@@ -118,7 +107,11 @@
                                               <Component id="qrdMonths1" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
+<<<<<<< Updated upstream
                                       <EmptySpace pref="170" max="32767" attributes="0"/>
+=======
+                                      <EmptySpace max="32767" attributes="0"/>
+>>>>>>> Stashed changes
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Component id="jLabel72" min="-2" max="-2" attributes="0"/>
                                           <Component id="qrdDays1" min="-2" max="-2" attributes="0"/>
@@ -143,7 +136,11 @@
                               </Group>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
+<<<<<<< Updated upstream
                               <EmptySpace pref="21" max="32767" attributes="0"/>
+=======
+                              <EmptySpace max="32767" attributes="0"/>
+>>>>>>> Stashed changes
                               <Component id="jScrollPane1" min="-2" pref="826" max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -217,7 +214,11 @@
                           <Component id="statusField" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="exportButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
+<<<<<<< Updated upstream
                       <EmptySpace max="32767" attributes="0"/>
+=======
+                      <EmptySpace pref="60" max="32767" attributes="0"/>
+>>>>>>> Stashed changes
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
                           <Group type="102" attributes="0">
@@ -427,6 +428,17 @@
               </Events>
             </Component>
           </SubComponents>
+        </Container>
+        <Container class="javax.swing.JTabbedPane" name="jTabbedPane1">
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+              <JTabbedPaneConstraints tabName="Graph">
+                <Property name="tabTitle" type="java.lang.String" value="Graph"/>
+              </JTabbedPaneConstraints>
+            </Constraint>
+          </Constraints>
+
+          <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
         </Container>
       </SubComponents>
     </Container>
