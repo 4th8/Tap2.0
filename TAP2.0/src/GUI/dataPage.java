@@ -81,6 +81,7 @@ public class dataPage extends javax.swing.JFrame {
             
             */
             ResultSet set = query.getAllTemp();// use the select query
+            ResultSet copySet = set;//a copy so cursors dont get messed up.
             ResultSetMetaData metaData = set.getMetaData();
             int numberOfColumns = metaData.getColumnCount();
             Vector columnNames = new Vector();
@@ -106,6 +107,21 @@ public class dataPage extends javax.swing.JFrame {
             End Snippet
             */
             results = new DefaultTableModel(rows, columnNames);
+            double high = -9999999.0;
+            double low = 9999999.0;
+            double avg;
+            double sum = 0;
+            int count = 0;
+            while(copySet.next()){
+                double value = copySet.getFloat("degrees_c");
+                count++;
+                sum += value;
+                if(value > high)
+                    high = value;
+                if(value < low)
+                    low = value;
+            }
+            avg = sum / (double)count;
         } catch (SQLException e) {
         }
         try{
@@ -113,6 +129,7 @@ public class dataPage extends javax.swing.JFrame {
         }catch(NullPointerException ex){
             ;
         }
+        
         
     }
     //Location GUI=new Location();
@@ -226,13 +243,6 @@ public class dataPage extends javax.swing.JFrame {
         rawPanel2Layout.setHorizontalGroup(
             rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(rawPanel2Layout.createSequentialGroup()
-                .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.LEADING))
-                .addGap(365, 365, 365)
-                .addComponent(jLabel22)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(rawPanel2Layout.createSequentialGroup()
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rawPanel2Layout.createSequentialGroup()
                         .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -273,8 +283,16 @@ public class dataPage extends javax.swing.JFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 826, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(215, 215, 215))
             .addGroup(rawPanel2Layout.createSequentialGroup()
-                .addGap(51, 51, 51)
-                .addComponent(jButton3)
+                .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(rawPanel2Layout.createSequentialGroup()
+                        .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton2, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addGap(365, 365, 365)
+                        .addComponent(jLabel22))
+                    .addGroup(rawPanel2Layout.createSequentialGroup()
+                        .addGap(51, 51, 51)
+                        .addComponent(jButton3)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         rawPanel2Layout.setVerticalGroup(
