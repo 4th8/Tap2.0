@@ -154,6 +154,7 @@ public class dbQuery {
             Logger.getLogger(dbQuery.class.getName()).log(Level.SEVERE, null, ex);
         }
      }
+     
 
     
     public String getLocationIdBySerialNumber(String SN) throws NoLocationException {

@@ -168,6 +168,7 @@ public class dataPage extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        updateSensorButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -258,6 +259,13 @@ public class dataPage extends javax.swing.JFrame {
         String highString = Float.toString(high);
         jLabel6.setText(highString);
 
+        updateSensorButton.setText("Update Sensor");
+        updateSensorButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateSensorButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout rawPanel2Layout = new javax.swing.GroupLayout(rawPanel2);
         rawPanel2.setLayout(rawPanel2Layout);
         rawPanel2Layout.setHorizontalGroup(
@@ -272,7 +280,8 @@ public class dataPage extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(exportButton))
                             .addGroup(rawPanel2Layout.createSequentialGroup()
-                                .addGap(204, 204, 204)
+                                .addComponent(updateSensorButton, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(28, 28, 28)
                                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(rawPanel2Layout.createSequentialGroup()
                                         .addComponent(jLabel26)
@@ -283,7 +292,7 @@ public class dataPage extends javax.swing.JFrame {
                                         .addComponent(qrdYears1)
                                         .addGap(124, 124, 124)
                                         .addComponent(qrdMonths1)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 209, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 170, Short.MAX_VALUE)
                                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel72)
                                     .addComponent(qrdDays1))))
@@ -299,7 +308,7 @@ public class dataPage extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(statusField, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rawPanel2Layout.createSequentialGroup()
-                        .addContainerGap(64, Short.MAX_VALUE)
+                        .addContainerGap(21, Short.MAX_VALUE)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 826, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -343,6 +352,8 @@ public class dataPage extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton4)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(updateSensorButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(qrdYears1)
                     .addComponent(qrdMonths1)
@@ -354,7 +365,7 @@ public class dataPage extends javax.swing.JFrame {
                     .addComponent(importButton)
                     .addComponent(statusField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(exportButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(rawPanel2Layout.createSequentialGroup()
@@ -558,12 +569,62 @@ public class dataPage extends javax.swing.JFrame {
                 System.out.print(jComboBox1.getSelectedItem());
             
                 query.deleteSensor(jComboBox1.getSelectedItem().toString());
+                JOptionPane.showMessageDialog(this, "Sensor Successfully Removed");
             }catch(Exception e){
                 JOptionPane.showMessageDialog(this, "No Sensors to Remove");       
             }
        }
    }
+        
+    private void updateSensor() throws SQLException{
+        JTextField inputNewSerial = new JTextField(8);
        
+       
+       JPanel serialPanel = new JPanel();
+
+       serialPanel.add(new JLabel("Select Serial Number"));
+       
+       
+       
+       ResultSet set = query.getSensorSerialNumber();
+       List<String> list = new ArrayList<String>();
+      
+       int count=0;
+       
+       while(set.next()){
+           list.add(set.getString(1));
+          
+       }
+      
+       String[] a=new String[list.size()];
+       while(count<list.size()){
+           a[count]=list.get(count);
+           
+           count++;
+       }
+//       System.out.print(list.get(1));
+       JComboBox<Object> jComboBox1 = new javax.swing.JComboBox<>();
+
+       
+      
+       jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(a));
+       serialPanel.add(jComboBox1);
+       serialPanel.add(new JLabel("New Serial Number:"));
+       serialPanel.add(inputNewSerial);
+       
+       int result = JOptionPane.showConfirmDialog(null, serialPanel, 
+               "Please fill out the form.", JOptionPane.OK_CANCEL_OPTION);
+        if (result == JOptionPane.OK_OPTION) {
+            try{
+                System.out.print(jComboBox1.getSelectedItem());
+            
+                query.updateSensor(jComboBox1.getSelectedItem().toString(), inputNewSerial.getText());
+                JOptionPane.showMessageDialog(this, "Sensor Successfully Updated");
+            }catch(Exception e){
+                JOptionPane.showMessageDialog(this, "No Sensors to Update");       
+            }
+       }
+   }
 
     
     private void exportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportButtonActionPerformed
@@ -638,6 +699,15 @@ public class dataPage extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void updateSensorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateSensorButtonActionPerformed
+        try {
+            // TODO add your handling code here:
+            updateSensor();
+        } catch (SQLException ex) {
+            Logger.getLogger(dataPage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_updateSensorButtonActionPerformed
     private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // textArea.setText("");
         // statusField.setText("New file");
@@ -672,6 +742,7 @@ public class dataPage extends javax.swing.JFrame {
     private javax.swing.JTable rawTable;
     private javax.swing.JTextField statusField;
     private javax.persistence.EntityManager tapPUEntityManager;
+    private javax.swing.JButton updateSensorButton;
     // End of variables declaration//GEN-END:variables
     private TableModel results;
     private float average;
