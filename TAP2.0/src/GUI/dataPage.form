@@ -50,7 +50,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="32767" attributes="0"/>
-              <Component id="graphTabbedPane" min="-2" pref="1149" max="-2" attributes="0"/>
+              <Component id="jTabbedPane2" min="-2" pref="1149" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -58,14 +58,14 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="graphTabbedPane" max="32767" attributes="0"/>
+              <Component id="jTabbedPane2" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="javax.swing.JTabbedPane" name="graphTabbedPane">
+    <Container class="javax.swing.JTabbedPane" name="jTabbedPane2">
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
       <SubComponents>
@@ -92,8 +92,7 @@
                                       <Component id="exportButton" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" attributes="0">
-                                      <Component id="updateSensorButton" min="-2" pref="170" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="204" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Group type="102" alignment="0" attributes="0">
                                               <Component id="jLabel26" min="-2" max="-2" attributes="0"/>
@@ -107,11 +106,7 @@
                                               <Component id="qrdMonths1" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
-<<<<<<< Updated upstream
-                                      <EmptySpace pref="170" max="32767" attributes="0"/>
-=======
-                                      <EmptySpace max="32767" attributes="0"/>
->>>>>>> Stashed changes
+                                      <EmptySpace pref="209" max="32767" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Component id="jLabel72" min="-2" max="-2" attributes="0"/>
                                           <Component id="qrdDays1" min="-2" max="-2" attributes="0"/>
@@ -136,11 +131,7 @@
                               </Group>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
-<<<<<<< Updated upstream
-                              <EmptySpace pref="21" max="32767" attributes="0"/>
-=======
-                              <EmptySpace max="32767" attributes="0"/>
->>>>>>> Stashed changes
+                              <EmptySpace pref="64" max="32767" attributes="0"/>
                               <Component id="jScrollPane1" min="-2" pref="826" max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -199,8 +190,6 @@
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="updateSensorButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="qrdYears1" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="qrdMonths1" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -214,11 +203,7 @@
                           <Component id="statusField" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="exportButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-<<<<<<< Updated upstream
-                      <EmptySpace max="32767" attributes="0"/>
-=======
-                      <EmptySpace pref="60" max="32767" attributes="0"/>
->>>>>>> Stashed changes
+                      <EmptySpace pref="14" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
                           <Group type="102" attributes="0">
@@ -418,14 +403,6 @@
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="String highString = Float.toString(high);"/>
               </AuxValues>
-            </Component>
-            <Component class="javax.swing.JButton" name="updateSensorButton">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Update Sensor"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="updateSensorButtonActionPerformed"/>
-              </Events>
             </Component>
           </SubComponents>
         </Container>

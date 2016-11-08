@@ -68,7 +68,7 @@ public class dbQuery {
     
     
     public void updateExportLocation(String location){
-        String query = String.format("UPDATE filepath SET filepath = '%s' WHERE kind = 'export';",location);
+        String query = String.format("UPDATE defaultSave SET filepath = '%s' WHERE kind = 'export';",location);
         try {
             database.executeInsert(query);
         } catch (SQLException ex) {
@@ -90,7 +90,6 @@ public class dbQuery {
         if(ans == null){
             throw new noExportLocationException();
         }
-            
         return ans;
     }
     

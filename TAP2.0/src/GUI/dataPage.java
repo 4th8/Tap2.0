@@ -50,6 +50,7 @@ public class dataPage extends javax.swing.JFrame {
     static class NotCSVException extends Exception{};
     private dbQuery query;
     private String importDefaultLocation;
+    private String exportDefaultLocation;
     /**
      * Creates new form dataPage
      * @param query
@@ -58,9 +59,11 @@ public class dataPage extends javax.swing.JFrame {
         this.query = query;
         try {
             this.importDefaultLocation = query.getImportLocation();
-            System.out.println(this.importDefaultLocation);
+            this.exportDefaultLocation = query.getExportLocation();
         } catch (dbQuery.noImportLocationException ex) {
             this.importDefaultLocation = null;
+        } catch (dbQuery.noExportLocationException ex) {
+            this.exportDefaultLocation = null;
         }
         updateResults();
         initComponents();
@@ -630,6 +633,14 @@ public class dataPage extends javax.swing.JFrame {
 
         try {                                             
             JFileChooser chooser = new JFileChooser();
+            if(this.exportDefaultLocation != null){
+                try{
+                File file = new File(query.getExportLocation());
+                chooser.setCurrentDirectory(file);
+                }catch(Exception e){
+                    ;
+                }
+            }
             int chooserValue = chooser.showSaveDialog(this);
             if (chooserValue == JFileChooser.APPROVE_OPTION) {
          
@@ -642,8 +653,9 @@ public class dataPage extends javax.swing.JFrame {
             DefaultTableModel dtm = (DefaultTableModel) rawTable.getModel();
             int nRow = dtm.getRowCount();
             int nCol = dtm.getColumnCount();
+            File outputfile = chooser.getSelectedFile();
             try {
-                writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(chooser.getSelectedFile().getAbsolutePath()+".csv"), "UTF-8"));
+                writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputfile.getAbsolutePath()+".csv"), "UTF-8"));
                 
                 //write the header information
                 StringBuffer bufferHeader = new StringBuffer();
@@ -672,6 +684,9 @@ public class dataPage extends javax.swing.JFrame {
             
             writer.close();
             JOptionPane.showMessageDialog(this, "File was Exported Correctly");
+            this.exportDefaultLocation = outputfile.getParent();
+            query.updateExportLocation(this.exportDefaultLocation);
+            System.out.println(this.exportDefaultLocation);
         } catch (IOException ex) {
             Logger.getLogger(dataPage.class.getName()).log(Level.SEVERE, null, ex);
         }
