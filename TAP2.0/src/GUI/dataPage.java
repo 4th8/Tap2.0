@@ -51,6 +51,7 @@ public class dataPage extends javax.swing.JFrame {
     private dbQuery query;
     private String importDefaultLocation;
     private String exportDefaultLocation;
+    private javax.swing.AbstractListModel<String> strings;
     /**
      * Creates new form dataPage
      * @param query
@@ -60,6 +61,11 @@ public class dataPage extends javax.swing.JFrame {
         try {
             this.importDefaultLocation = query.getImportLocation();
             this.exportDefaultLocation = query.getExportLocation();
+            this.strings = new javax.swing.AbstractListModel<String>() {
+                String[] locations = query.getAllLocations();
+    public int getSize() { return locations.length; }
+    public String getElementAt(int i) { return locations[i]; }
+};
         } catch (dbQuery.noImportLocationException ex) {
             this.importDefaultLocation = null;
         } catch (dbQuery.noExportLocationException ex) {
@@ -83,6 +89,12 @@ public class dataPage extends javax.swing.JFrame {
             Code snippet adaped from http://technojeeves.com/index.php/22-resultset-to-tablemodel
             
             */
+            strings = new javax.swing.AbstractListModel<String>() {
+                String[] locations = query.getAllLocations();
+    public int getSize() { return locations.length; }
+    public String getElementAt(int i) { return locations[i]; }
+};
+            
             ResultSet set = query.getAllTemp();// use the select query
             ResultSet copySet = set;//a copy so cursors dont get messed up.
             float sum = 0;
@@ -98,7 +110,9 @@ public class dataPage extends javax.swing.JFrame {
 
             // Get all rows.
             Vector rows = new Vector();
-
+            high = 0;
+            low = 0;
+            average = 0;
             while (set.next()) {
                 float value = set.getFloat("degrees_c");
                 count++;
@@ -126,6 +140,10 @@ public class dataPage extends javax.swing.JFrame {
         }
         try{
         rawTable.setModel(results);
+        jLabel4.setText(Float.toString(average));
+        jLabel5.setText(Float.toString(low));
+        jLabel6.setText(Float.toString(high));
+        jList1.setModel(strings);
         }catch(NullPointerException ex){
             ;
         }
@@ -145,7 +163,7 @@ public class dataPage extends javax.swing.JFrame {
         tapPUEntityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("tapPU").createEntityManager();
         locationQuery = java.beans.Beans.isDesignTime() ? null : tapPUEntityManager.createQuery("SELECT l FROM Location l");
         locationList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : locationQuery.getResultList();
-        graphTabbedPane = new javax.swing.JTabbedPane();
+        jTabbedPane2 = new javax.swing.JTabbedPane();
         rawPanel2 = new javax.swing.JPanel();
         jLabel22 = new javax.swing.JLabel();
         jLabel24 = new javax.swing.JLabel();
@@ -170,7 +188,8 @@ public class dataPage extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        updateSensorButton = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList<>();
         jTabbedPane1 = new javax.swing.JTabbedPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -253,6 +272,11 @@ public class dataPage extends javax.swing.JFrame {
 
         String avg  = Float.toString(average);
         jLabel4.setText(avg);
+        jLabel4.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jLabel4PropertyChange(evt);
+            }
+        });
 
         String lowstring = Float.toString(low);
         jLabel5.setText(lowstring);
@@ -260,12 +284,13 @@ public class dataPage extends javax.swing.JFrame {
         String highString = Float.toString(high);
         jLabel6.setText(highString);
 
-        updateSensorButton.setText("Update Sensor");
-        updateSensorButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                updateSensorButtonActionPerformed(evt);
+        jList1.setModel(strings);
+        jList1.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jList1ValueChanged(evt);
             }
         });
+        jScrollPane2.setViewportView(jList1);
 
         javax.swing.GroupLayout rawPanel2Layout = new javax.swing.GroupLayout(rawPanel2);
         rawPanel2.setLayout(rawPanel2Layout);
@@ -281,8 +306,7 @@ public class dataPage extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(exportButton))
                             .addGroup(rawPanel2Layout.createSequentialGroup()
-                                .addComponent(updateSensorButton, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(28, 28, 28)
+                                .addGap(204, 204, 204)
                                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(rawPanel2Layout.createSequentialGroup()
                                         .addComponent(jLabel26)
@@ -293,7 +317,7 @@ public class dataPage extends javax.swing.JFrame {
                                         .addComponent(qrdYears1)
                                         .addGap(124, 124, 124)
                                         .addComponent(qrdMonths1)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 170, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 209, Short.MAX_VALUE)
                                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel72)
                                     .addComponent(qrdDays1))))
@@ -309,18 +333,23 @@ public class dataPage extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(statusField, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rawPanel2Layout.createSequentialGroup()
-                        .addContainerGap(21, Short.MAX_VALUE)
+                        .addContainerGap(64, Short.MAX_VALUE)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 826, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3))
-                .addGap(18, 18, 18)
-                .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel4))
+                    .addGroup(rawPanel2Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3))
+                        .addGap(18, 18, 18)
+                        .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel4)))
+                    .addGroup(rawPanel2Layout.createSequentialGroup()
+                        .addGap(38, 38, 38)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(111, 111, 111))
             .addGroup(rawPanel2Layout.createSequentialGroup()
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -353,8 +382,6 @@ public class dataPage extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton4)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(updateSensorButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(qrdYears1)
                     .addComponent(qrdMonths1)
@@ -366,7 +393,7 @@ public class dataPage extends javax.swing.JFrame {
                     .addComponent(importButton)
                     .addComponent(statusField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(exportButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(rawPanel2Layout.createSequentialGroup()
@@ -380,12 +407,14 @@ public class dataPage extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
-                            .addComponent(jLabel6))))
+                            .addComponent(jLabel6))
+                        .addGap(89, 89, 89)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18))
         );
 
-        graphTabbedPane.addTab("Raw Data", rawPanel2);
-        graphTabbedPane.addTab("Graph", jTabbedPane1);
+        jTabbedPane2.addTab("Raw Data", rawPanel2);
+        jTabbedPane2.addTab("Graph", jTabbedPane1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -393,13 +422,13 @@ public class dataPage extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(graphTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 1149, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1149, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(graphTabbedPane)
+                .addComponent(jTabbedPane2)
                 .addContainerGap())
         );
 
@@ -421,6 +450,7 @@ public class dataPage extends javax.swing.JFrame {
             JPanel panel = new JPanel();
             JOptionPane.showMessageDialog(panel, "File must be a .csv format.", "Invalid Filetype", JOptionPane.ERROR_MESSAGE);            
         }
+        updateResults();
     }//GEN-LAST:event_importButtonActionPerformed
     private void importFile()throws InvalidFilenameException, NotCSVException{
         JFileChooser chooser = new JFileChooser();
@@ -514,6 +544,7 @@ public class dataPage extends javax.swing.JFrame {
         if (result == JOptionPane.OK_OPTION) {
             query.insertLocation(sensorSerialNumber.getText(),fullName.getText(), abb.getText());
       }
+        updateResults();
     }
     private void addSensor(String serialNumber){        
         JTextField fullName = new JTextField(5);
@@ -576,6 +607,7 @@ public class dataPage extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "No Sensors to Remove");       
             }
        }
+        updateResults();
    }
         
     private void updateSensor() throws SQLException{
@@ -626,6 +658,7 @@ public class dataPage extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "No Sensors to Update");       
             }
        }
+        updateResults();
    }
 
     
@@ -721,14 +754,22 @@ public class dataPage extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(dataPage.class.getName()).log(Level.SEVERE, null, ex);
         }
+        updateResults();
     }//GEN-LAST:event_updateSensorButtonActionPerformed
+
+    private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jList1ValueChanged
+
+    private void jLabel4PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jLabel4PropertyChange
+        updateResults();
+    }//GEN-LAST:event_jLabel4PropertyChange
     private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // textArea.setText("");
         // statusField.setText("New file");
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton exportButton;
-    private javax.swing.JTabbedPane graphTabbedPane;
     private javax.swing.JButton importButton;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -744,8 +785,11 @@ public class dataPage extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel72;
     private javax.swing.JLabel jLabel73;
+    private javax.swing.JList<String> jList1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTabbedPane jTabbedPane2;
     private java.util.List<GUI.Location> locationList;
     private javax.persistence.Query locationQuery;
     private javax.swing.JLabel qrdDays1;
@@ -756,7 +800,6 @@ public class dataPage extends javax.swing.JFrame {
     private javax.swing.JTable rawTable;
     private javax.swing.JTextField statusField;
     private javax.persistence.EntityManager tapPUEntityManager;
-    private javax.swing.JButton updateSensorButton;
     // End of variables declaration//GEN-END:variables
     private TableModel results;
     private float average;
