@@ -7,9 +7,9 @@ package tap2.pkg0;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.postgresql.util.PSQLException;
 
 /**
  *
@@ -27,7 +27,37 @@ public class dbQuery {
         this.database = database;
     }
 
-    ;
+    private String tableQuery;
+    
+    public void filterTable(ArrayList<String> locations){
+        String query =  "SELECT temperature.time_stamp, temperature.degrees_c, location.abbreviation FROM temperature JOIN location on temperature.location_id = location.location_id WHERE location.abbreviation = ";
+        for(String f: locations){
+            query += "OR ";
+            query += f;
+        }
+        this.tableQuery = query;
+    }
+    
+    public void filterTable(ArrayList<String> locations, String startDate, String endDate){
+        String query =  "SELECT temperature.time_stamp, temperature.degrees_c, location.abbreviation FROM temperature JOIN location on temperature.location_id = location.location_id WHERE location.abbreviation = ";
+        for(String f: locations){
+            query += "OR ";
+            query += f;
+        }
+        if(!startDate.equals(""))
+            query += "AND temperature.time_stamp >" + startDate;
+        if(!endDate.equals(""))
+            query += "AND temperature.time_stamp <" + endDate;
+        this.tableQuery = query;
+    }
+    public void filterTable(String startDate, String endDate){
+        String query =  "SELECT temperature.time_stamp, temperature.degrees_c, location.abbreviation FROM temperature JOIN location on temperature.location_id = location.location_id WHERE location.abbreviation = ";
+        if(!startDate.equals(""))
+            query += "AND temperature.time_stamp >" + startDate;
+        if(!endDate.equals(""))
+            query += "AND temperature.time_stamp <" + endDate;
+        this.tableQuery = query;
+    }
     
     public void insertLocation(String serialNumber, String name, String abb) {
         String insertIntoLocation = String.format("INSERT INTO location (full_name,abbreviation)VALUES ('%s', '%s');", name, abb);
