@@ -199,6 +199,7 @@ public class dataPage extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
         filterButton = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -308,6 +309,13 @@ public class dataPage extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setText("Update Sensor");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateSensorActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout rawPanel2Layout = new javax.swing.GroupLayout(rawPanel2);
         rawPanel2.setLayout(rawPanel2Layout);
         rawPanel2Layout.setHorizontalGroup(
@@ -324,7 +332,8 @@ public class dataPage extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(exportButton))
                             .addGroup(rawPanel2Layout.createSequentialGroup()
-                                .addGap(204, 204, 204)
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(28, 28, 28)
                                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(rawPanel2Layout.createSequentialGroup()
                                         .addComponent(jLabel26)
@@ -399,6 +408,8 @@ public class dataPage extends javax.swing.JFrame {
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton4)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(qrdYears1)
@@ -412,7 +423,7 @@ public class dataPage extends javax.swing.JFrame {
                     .addComponent(statusField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(exportButton)
                     .addComponent(filterButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(rawPanel2Layout.createSequentialGroup()
@@ -805,13 +816,7 @@ public class dataPage extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void updateSensorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateSensorButtonActionPerformed
-        try {
-            // TODO add your handling code here:
-            updateSensor();
-        } catch (SQLException ex) {
-            Logger.getLogger(dataPage.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        updateResults();
+    
     }//GEN-LAST:event_updateSensorButtonActionPerformed
 
     private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
@@ -826,6 +831,17 @@ public class dataPage extends javax.swing.JFrame {
         // TODO add your handling code here:
         filterButton();
     }//GEN-LAST:event_fillterButtonActionPerformed
+
+    private void updateSensorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateSensorActionPerformed
+        // TODO add your handling code here:
+            try {
+            // TODO add your handling code here:
+            updateSensor();
+        } catch (SQLException ex) {
+            Logger.getLogger(dataPage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        updateResults();
+    }//GEN-LAST:event_updateSensorActionPerformed
     private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // textArea.setText("");
         // statusField.setText("New file");
@@ -834,6 +850,7 @@ public class dataPage extends javax.swing.JFrame {
     private javax.swing.JButton exportButton;
     private javax.swing.JButton filterButton;
     private javax.swing.JButton importButton;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
