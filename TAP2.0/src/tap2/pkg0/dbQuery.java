@@ -207,19 +207,29 @@ public class dbQuery {
             Logger.getLogger(dbQuery.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    public ResultSet get_All_Location_Field() {
-        String All_Location_Field = "SELECT * FROM location;";
+    public String[] getAllLocations() {
+        String All_Location_Field = "SELECT full_name FROM location;";
         ResultSet result = null;
+        ArrayList<String> list = new ArrayList<String>();
         try {
             database.executeSelect(All_Location_Field);
             result = database.executeSelect(All_Location_Field);
+             while (result.next()){
+                 list.add(result.getString(1));
+        }
         } catch (SQLException ex) {
             Logger.getLogger(dbQuery.class.getName()).log(Level.SEVERE, null, ex);
         }
+        int size = list.size();
+        String[] ans = new String[size];
+        for(int i = 0; i < size; i++){
+            ans[i] = list.get(i);
+        }
+       
         /*
         Thow Exception here.
         */
-        return result;
+        return ans;
     }
     public ResultSet getAllTemp(){
         
