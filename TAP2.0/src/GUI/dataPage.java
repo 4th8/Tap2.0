@@ -20,7 +20,10 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 import java.util.Scanner;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
@@ -39,6 +42,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
 import tap2.pkg0.dbQuery;
 
 /**
@@ -52,6 +58,8 @@ public class dataPage extends javax.swing.JFrame {
     private String importDefaultLocation;
     private String exportDefaultLocation;
     private javax.swing.AbstractListModel<String> strings;
+    private String startDate;
+    private String endDate;
     /**
      * Creates new form dataPage
      * @param query
@@ -90,7 +98,7 @@ public class dataPage extends javax.swing.JFrame {
             
             */
             strings = new javax.swing.AbstractListModel<String>() {
-                String[] locations = query.getAllLocations();
+                String[] locations= query.getAllLocations();
     public int getSize() { return locations.length; }
     public String getElementAt(int i) { return locations[i]; }
 };
@@ -190,6 +198,7 @@ public class dataPage extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
+        filterButton = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -292,6 +301,13 @@ public class dataPage extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(jList1);
 
+        filterButton.setText("Filter");
+        filterButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fillterButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout rawPanel2Layout = new javax.swing.GroupLayout(rawPanel2);
         rawPanel2.setLayout(rawPanel2Layout);
         rawPanel2Layout.setHorizontalGroup(
@@ -301,7 +317,9 @@ public class dataPage extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rawPanel2Layout.createSequentialGroup()
                         .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(rawPanel2Layout.createSequentialGroup()
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addContainerGap()
+                                .addComponent(filterButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(importButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(exportButton))
@@ -333,7 +351,7 @@ public class dataPage extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(statusField, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rawPanel2Layout.createSequentialGroup()
-                        .addContainerGap(64, Short.MAX_VALUE)
+                        .addContainerGap(21, Short.MAX_VALUE)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 826, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(rawPanel2Layout.createSequentialGroup()
@@ -392,7 +410,8 @@ public class dataPage extends javax.swing.JFrame {
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(importButton)
                     .addComponent(statusField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(exportButton))
+                    .addComponent(exportButton)
+                    .addComponent(filterButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -587,7 +606,6 @@ public class dataPage extends javax.swing.JFrame {
            
            count++;
        }
-//       System.out.print(list.get(1));
        JComboBox<Object> jComboBox1 = new javax.swing.JComboBox<>();
 
        
@@ -636,7 +654,6 @@ public class dataPage extends javax.swing.JFrame {
            
            count++;
        }
-//       System.out.print(list.get(1));
        JComboBox<Object> jComboBox1 = new javax.swing.JComboBox<>();
 
        
@@ -660,6 +677,46 @@ public class dataPage extends javax.swing.JFrame {
        }
         updateResults();
    }
+    
+    private void filterButton(){
+         
+       JPanel serialPanel = new JPanel();
+       
+       UtilDateModel modelStartDate = new UtilDateModel();
+       UtilDateModel modelEndDate = new UtilDateModel();
+
+        //model.setDate(20,04,2014);
+        // Need this...
+        Properties p = new Properties();
+        p.put("text.today", "Today");
+        p.put("text.month", "Month");
+        p.put("text.year", "Year");
+        
+        JDatePanelImpl dateStartPanel = new JDatePanelImpl(modelStartDate, p);
+        JDatePanelImpl dateEndPanel = new JDatePanelImpl(modelEndDate, p);
+
+        // Don't know about the formatter, but there it is...
+        serialPanel.add(new JLabel("Select Start Date"));
+        JDatePickerImpl dateStartPicker = new JDatePickerImpl(dateStartPanel, new DateLabelFormatter());
+        serialPanel.add(dateStartPicker);
+        
+        serialPanel.add(new JLabel("Select End Date"));
+        JDatePickerImpl dateEndPicker = new JDatePickerImpl(dateEndPanel, new DateLabelFormatter());
+        serialPanel.add(dateEndPicker);
+        
+       
+       int result = JOptionPane.showConfirmDialog(null, serialPanel, 
+               "Please fill out the form.", JOptionPane.OK_CANCEL_OPTION);
+        if (result == JOptionPane.OK_OPTION) {
+                        
+            startDate = dateStartPicker.getJFormattedTextField().getText(); // Global Variable
+            endDate = dateEndPicker.getJFormattedTextField().getText(); //   Global Variable
+            
+            String date = String.format("Start Date: %s End Date: %s", startDate,endDate);
+            System.out.println(date);
+       }
+        updateResults();
+    }
 
     
     private void exportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportButtonActionPerformed
@@ -764,12 +821,18 @@ public class dataPage extends javax.swing.JFrame {
     private void jLabel4PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jLabel4PropertyChange
         updateResults();
     }//GEN-LAST:event_jLabel4PropertyChange
+
+    private void fillterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillterButtonActionPerformed
+        // TODO add your handling code here:
+        filterButton();
+    }//GEN-LAST:event_fillterButtonActionPerformed
     private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // textArea.setText("");
         // statusField.setText("New file");
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton exportButton;
+    private javax.swing.JButton filterButton;
     private javax.swing.JButton importButton;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
