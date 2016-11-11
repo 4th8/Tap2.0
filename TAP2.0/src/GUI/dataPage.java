@@ -5,6 +5,7 @@
  */
 package GUI;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
@@ -224,6 +225,10 @@ public class dataPage extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jTabbedPane2.setBackground(new java.awt.Color(204, 255, 204));
+
+        rawPanel2.setBackground(new java.awt.Color(204, 255, 255));
+
         jLabel22.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         jLabel22.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tap2/pkg0/resources/rsz_tap-portugal-logo.png"))); // NOI18N
         jLabel22.setText("Raw Data");
@@ -264,7 +269,7 @@ public class dataPage extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setBackground(java.awt.Color.red);
+        jButton3.setBackground(new java.awt.Color(255, 102, 153));
         jButton3.setForeground(new java.awt.Color(0, 0, 51));
         jButton3.setText("CLEAR DATABASE");
         jButton3.setToolTipText("Pressing this button will clear everything in the Database");
@@ -341,17 +346,15 @@ public class dataPage extends javax.swing.JFrame {
             .addGroup(rawPanel2Layout.createSequentialGroup()
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(rawPanel2Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rawPanel2Layout.createSequentialGroup()
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(importButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(exportButton)
                                 .addGap(18, 18, 18)
                                 .addComponent(statusField, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rawPanel2Layout.createSequentialGroup()
-                                .addContainerGap(124, Short.MAX_VALUE)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 826, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 826, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(rawPanel2Layout.createSequentialGroup()
                                 .addGap(18, 18, 18)
@@ -396,7 +399,7 @@ public class dataPage extends javax.swing.JFrame {
                     .addGroup(rawPanel2Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(importButton)
                     .addComponent(statusField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -565,6 +568,7 @@ public class dataPage extends javax.swing.JFrame {
         JTextField abb = new JTextField(3);
 
         JPanel myPanel = new JPanel();
+       
         myPanel.add(new JLabel("Location Name:"));
         myPanel.add(fullName);
         myPanel.add(new JLabel("Location abbreviation:"));
@@ -574,6 +578,7 @@ public class dataPage extends javax.swing.JFrame {
         if (result == JOptionPane.OK_OPTION) {
             query.insertLocation(serialNumber, fullName.getText(), abb.getText());
         }
+        
         updateResults();
     }
 
