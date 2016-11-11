@@ -257,7 +257,11 @@ public class dataPage extends javax.swing.JFrame {
         });
 
         rawTable.setAutoCreateRowSorter(true);
+        rawTable.setBackground(new java.awt.Color(235, 229, 255));
+        rawTable.setFont(new java.awt.Font("Lucida Grande", 1, 12)); // NOI18N
         rawTable.setModel(results);
+        rawTable.setToolTipText("");
+        rawTable.setShowGrid(true);
         jScrollPane1.setViewportView(rawTable);
         rawTable.getAccessibleContext().setAccessibleParent(rawTable);
 
