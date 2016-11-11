@@ -19,6 +19,7 @@ import java.io.Writer;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -34,12 +35,16 @@ import java.util.regex.Pattern;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerDateModel;
+import javax.swing.SpinnerModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import org.jdatepicker.impl.JDatePanelImpl;
@@ -52,16 +57,24 @@ import tap2.pkg0.dbQuery;
  * @author marc
  */
 public class dataPage extends javax.swing.JFrame {
-    static class InvalidFilenameException extends Exception{};
-    static class NotCSVException extends Exception{};
+
+    static class InvalidFilenameException extends Exception {
+    };
+
+    static class NotCSVException extends Exception {
+    };
     private dbQuery query;
     private String importDefaultLocation;
     private String exportDefaultLocation;
     private javax.swing.AbstractListModel<String> strings;
     private String startDate;
     private String endDate;
+    private String startTime = "00:00:00";
+    private String endTime = "23:00:00";
+
     /**
      * Creates new form dataPage
+     *
      * @param query
      */
     public dataPage(dbQuery query) {
@@ -71,9 +84,15 @@ public class dataPage extends javax.swing.JFrame {
             this.exportDefaultLocation = query.getExportLocation();
             this.strings = new javax.swing.AbstractListModel<String>() {
                 String[] locations = query.getAllLocations();
-    public int getSize() { return locations.length; }
-    public String getElementAt(int i) { return locations[i]; }
-};
+
+                public int getSize() {
+                    return locations.length;
+                }
+
+                public String getElementAt(int i) {
+                    return locations[i];
+                }
+            };
         } catch (dbQuery.noImportLocationException ex) {
             this.importDefaultLocation = null;
         } catch (dbQuery.noExportLocationException ex) {
@@ -82,27 +101,33 @@ public class dataPage extends javax.swing.JFrame {
         updateResults();
         initComponents();
     }
+
     /*
     This should allow the user to sort the results shown on the screen.
     It will 
-    */
-    private void updateResults(){
+     */
+    private void updateResults() {
         try {
-            
-            
+
             /*
             import praram here
-            */
-            /*
+             */
+ /*
             Code snippet adaped from http://technojeeves.com/index.php/22-resultset-to-tablemodel
             
-            */
+             */
             strings = new javax.swing.AbstractListModel<String>() {
-                String[] locations= query.getAllLocations();
-    public int getSize() { return locations.length; }
-    public String getElementAt(int i) { return locations[i]; }
-};
-            
+                String[] locations = query.getAllLocations();
+
+                public int getSize() {
+                    return locations.length;
+                }
+
+                public String getElementAt(int i) {
+                    return locations[i];
+                }
+            };
+
             ResultSet set = query.getAllTemp();// use the select query
             ResultSet copySet = set;//a copy so cursors dont get messed up.
             float sum = 0;
@@ -126,11 +151,13 @@ public class dataPage extends javax.swing.JFrame {
                 count++;
                 sum += value;
                 average = sum / count;
-            
-                if(value > high)
+
+                if (value > high) {
                     high = value;
-                if(value < low)
+                }
+                if (value < low) {
                     low = value;
+                }
                 Vector newRow = new Vector();
 
                 for (int i = 1; i <= numberOfColumns; i++) {
@@ -141,23 +168,23 @@ public class dataPage extends javax.swing.JFrame {
             }
             /*
             End Snippet
-            */
+             */
             results = new DefaultTableModel(rows, columnNames);
-            
+
         } catch (SQLException e) {
         }
-        try{
-        rawTable.setModel(results);
-        jLabel4.setText(Float.toString(average));
-        jLabel5.setText(Float.toString(low));
-        jLabel6.setText(Float.toString(high));
-        jList1.setModel(strings);
-        }catch(NullPointerException ex){
+        try {
+            rawTable.setModel(results);
+            jLabel4.setText(Float.toString(average));
+            jLabel5.setText(Float.toString(low));
+            jLabel6.setText(Float.toString(high));
+            jList1.setModel(strings);
+        } catch (NullPointerException ex) {
             ;
         }
-        
-        
+
     }
+
     //Location GUI=new Location();
     /**
      * This method is called from within the constructor to initialize the form.
@@ -200,6 +227,7 @@ public class dataPage extends javax.swing.JFrame {
         jList1 = new javax.swing.JList<>();
         filterButton = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -302,7 +330,7 @@ public class dataPage extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(jList1);
 
-        filterButton.setText("Filter");
+        filterButton.setText("Date Filter");
         filterButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fillterButtonActionPerformed(evt);
@@ -316,6 +344,13 @@ public class dataPage extends javax.swing.JFrame {
             }
         });
 
+        jButton5.setText("Time Filter");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                timeFilterActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout rawPanel2Layout = new javax.swing.GroupLayout(rawPanel2);
         rawPanel2.setLayout(rawPanel2Layout);
         rawPanel2Layout.setHorizontalGroup(
@@ -325,9 +360,7 @@ public class dataPage extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rawPanel2Layout.createSequentialGroup()
                         .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(rawPanel2Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(filterButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(importButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(exportButton))
@@ -376,7 +409,12 @@ public class dataPage extends javax.swing.JFrame {
                             .addComponent(jLabel4)))
                     .addGroup(rawPanel2Layout.createSequentialGroup()
                         .addGap(38, 38, 38)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(rawPanel2Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+                            .addComponent(filterButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(111, 111, 111))
             .addGroup(rawPanel2Layout.createSequentialGroup()
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -421,8 +459,7 @@ public class dataPage extends javax.swing.JFrame {
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(importButton)
                     .addComponent(statusField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(exportButton)
-                    .addComponent(filterButton))
+                    .addComponent(exportButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -438,7 +475,11 @@ public class dataPage extends javax.swing.JFrame {
                         .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
                             .addComponent(jLabel6))
-                        .addGap(89, 89, 89)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(filterButton)
+                        .addGap(1, 1, 1)
+                        .addComponent(jButton5)
+                        .addGap(18, 18, 18)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18))
         );
@@ -475,17 +516,17 @@ public class dataPage extends javax.swing.JFrame {
             importFile();
         } catch (InvalidFilenameException ex) {
             JPanel panel = new JPanel();
-            JOptionPane.showMessageDialog(panel, "Name must include serial number. \n Ex: 2015_<<serialNumber>>_temp.csv", "Invalid Filename", JOptionPane.ERROR_MESSAGE);            
-        }catch (NotCSVException ex) {
+            JOptionPane.showMessageDialog(panel, "Name must include serial number. \n Ex: 2015_<<serialNumber>>_temp.csv", "Invalid Filename", JOptionPane.ERROR_MESSAGE);
+        } catch (NotCSVException ex) {
             JPanel panel = new JPanel();
-            JOptionPane.showMessageDialog(panel, "File must be a .csv format.", "Invalid Filetype", JOptionPane.ERROR_MESSAGE);            
+            JOptionPane.showMessageDialog(panel, "File must be a .csv format.", "Invalid Filetype", JOptionPane.ERROR_MESSAGE);
         }
         updateResults();
     }//GEN-LAST:event_importButtonActionPerformed
-    private void importFile()throws InvalidFilenameException, NotCSVException{
+    private void importFile() throws InvalidFilenameException, NotCSVException {
         JFileChooser chooser = new JFileChooser();
         boolean fileChosen = false;
-        if(this.importDefaultLocation != null){
+        if (this.importDefaultLocation != null) {
             File currentDir = new File(this.importDefaultLocation);
             chooser.setCurrentDirectory(currentDir);
         }
@@ -500,39 +541,37 @@ public class dataPage extends javax.swing.JFrame {
                 fin = new Scanner(chooser.getSelectedFile());
                 String filename = chooser.getSelectedFile().getName();
                 System.out.println(chooser.getSelectedFile().getPath());
-                if(!filename.endsWith(".csv")){
+                if (!filename.endsWith(".csv")) {
                     throw new NotCSVException();
                 }
                 Pattern pattern = Pattern.compile("([0-9]{6})");
                 Matcher matcher = pattern.matcher(filename);
-                if (matcher.find()){
+                if (matcher.find()) {
                     serialNumber = (matcher.group(1));
-                    while (locationID.equals("")){
+                    while (locationID.equals("")) {
                         try {
                             locationID = query.getLocationIdBySerialNumber(serialNumber);
                         } catch (dbQuery.NoLocationException ex) {
                             addSensor(serialNumber);
                         }
                     }
-                }
-                else{
+                } else {
                     throw new InvalidFilenameException();
                 }
-                if(fin.hasNextLine()){
+                if (fin.hasNextLine()) {
                     fin.nextLine();
+                } else {
+                    System.out.println("You meesed up.\n" + filename);
                 }
-                else{
-                    System.out.println("You meesed up.\n"+filename);
-                }
-               while(fin.hasNext()){
+                while (fin.hasNext()) {
                     String rawline = fin.nextLine();
-                    String [] line = rawline.split(",");
+                    String[] line = rawline.split(",");
                     String timestamp = line[0];
                     double temp = Double.parseDouble(line[1]);
-                    try{
-                    query.insertTemperatureData(timestamp, temp, serialNumber, locationID);
-                    num++;
-                    }catch(SQLException ex){
+                    try {
+                        query.insertTemperatureData(timestamp, temp, serialNumber, locationID);
+                        num++;
+                    } catch (SQLException ex) {
                         continue;
                     }
                 }
@@ -546,22 +585,23 @@ public class dataPage extends javax.swing.JFrame {
             }
         }
         String message;
-        if(fileChosen && num > 0){
+        if (fileChosen && num > 0) {
             message = Integer.toString(num) + " temperatures added.";
             JOptionPane.showMessageDialog(this, message);
         }
-        if(num == 0 && fileChosen){
+        if (num == 0 && fileChosen) {
             message = "File has already been added to the database.";
             JOptionPane.showMessageDialog(this, message);
         }
-        
+
         updateResults();
     }
-    private void addSensor(){    
+
+    private void addSensor() {
         JTextField fullName = new JTextField(5);
         JTextField abb = new JTextField(3);
         JTextField sensorSerialNumber = new JTextField(6);
-        
+
         JPanel myPanel = new JPanel();
         myPanel.add(new JLabel("Location Name:"));
         myPanel.add(fullName);
@@ -569,132 +609,123 @@ public class dataPage extends javax.swing.JFrame {
         myPanel.add(abb);
         myPanel.add(new JLabel("Sensor Serial Number:"));
         myPanel.add(sensorSerialNumber);
-        int result = JOptionPane.showConfirmDialog(null, myPanel, 
-               "Please fill out the form.", JOptionPane.OK_CANCEL_OPTION);
+        int result = JOptionPane.showConfirmDialog(null, myPanel,
+                "Please fill out the form.", JOptionPane.OK_CANCEL_OPTION);
         if (result == JOptionPane.OK_OPTION) {
-            query.insertLocation(sensorSerialNumber.getText(),fullName.getText(), abb.getText());
-      }
+            query.insertLocation(sensorSerialNumber.getText(), fullName.getText(), abb.getText());
+        }
         updateResults();
     }
-    private void addSensor(String serialNumber){        
+
+    private void addSensor(String serialNumber) {
         JTextField fullName = new JTextField(5);
         JTextField abb = new JTextField(3);
-        
-        
+
         JPanel myPanel = new JPanel();
         myPanel.add(new JLabel("Location Name:"));
         myPanel.add(fullName);
         myPanel.add(new JLabel("Location abbreviation:"));
         myPanel.add(abb);
-        int result = JOptionPane.showConfirmDialog(null, myPanel, 
-               "Please fill out the form.", JOptionPane.OK_CANCEL_OPTION);
+        int result = JOptionPane.showConfirmDialog(null, myPanel,
+                "Please fill out the form.", JOptionPane.OK_CANCEL_OPTION);
         if (result == JOptionPane.OK_OPTION) {
-            query.insertLocation(serialNumber,fullName.getText(), abb.getText());
+            query.insertLocation(serialNumber, fullName.getText(), abb.getText());
         }
         updateResults();
     }
-    
-    private void removeSensor() throws SQLException{
-       
-       
-       
-       JPanel serialPanel = new JPanel();
-       serialPanel.add(new JLabel("Select Serial Number"));
-       
-       ResultSet set = query.getSensorSerialNumber();
-       List<String> list = new ArrayList<String>();
-      
-       int count=0;
-       
-       while(set.next()){
-           list.add(set.getString(1));
-          
-       }
-      
-       String[] a=new String[list.size()];
-       while(count<list.size()){
-           a[count]=list.get(count);
-           
-           count++;
-       }
-       JComboBox<Object> jComboBox1 = new javax.swing.JComboBox<>();
 
-       
-      
-       jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(a));
-       serialPanel.add(jComboBox1);
-       
-       int result = JOptionPane.showConfirmDialog(null, serialPanel, 
-               "Please fill out the form.", JOptionPane.OK_CANCEL_OPTION);
+    private void removeSensor() throws SQLException {
+
+        JPanel serialPanel = new JPanel();
+        serialPanel.add(new JLabel("Select Serial Number"));
+
+        ResultSet set = query.getSensorSerialNumber();
+        List<String> list = new ArrayList<String>();
+
+        int count = 0;
+
+        while (set.next()) {
+            list.add(set.getString(1));
+
+        }
+
+        String[] a = new String[list.size()];
+        while (count < list.size()) {
+            a[count] = list.get(count);
+
+            count++;
+        }
+        JComboBox<Object> jComboBox1 = new javax.swing.JComboBox<>();
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(a));
+        serialPanel.add(jComboBox1);
+
+        int result = JOptionPane.showConfirmDialog(null, serialPanel,
+                "Please fill out the form.", JOptionPane.OK_CANCEL_OPTION);
         if (result == JOptionPane.OK_OPTION) {
-            try{
+            try {
                 System.out.print(jComboBox1.getSelectedItem());
-            
+
                 query.deleteSensor(jComboBox1.getSelectedItem().toString());
                 JOptionPane.showMessageDialog(this, "Sensor Successfully Removed");
-            }catch(Exception e){
-                JOptionPane.showMessageDialog(this, "No Sensors to Remove");       
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "No Sensors to Remove");
             }
-       }
+        }
         updateResults();
-   }
-        
-    private void updateSensor() throws SQLException{
+    }
+
+    private void updateSensor() throws SQLException {
         JTextField inputNewSerial = new JTextField(8);
-       
-       
-       JPanel serialPanel = new JPanel();
 
-       serialPanel.add(new JLabel("Select Serial Number"));
-       
-       
-       
-       ResultSet set = query.getSensorSerialNumber();
-       List<String> list = new ArrayList<String>();
-      
-       int count=0;
-       
-       while(set.next()){
-           list.add(set.getString(1));
-          
-       }
-      
-       String[] a=new String[list.size()];
-       while(count<list.size()){
-           a[count]=list.get(count);
-           
-           count++;
-       }
-       JComboBox<Object> jComboBox1 = new javax.swing.JComboBox<>();
+        JPanel serialPanel = new JPanel();
 
-       
-      
-       jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(a));
-       serialPanel.add(jComboBox1);
-       serialPanel.add(new JLabel("New Serial Number:"));
-       serialPanel.add(inputNewSerial);
-       
-       int result = JOptionPane.showConfirmDialog(null, serialPanel, 
-               "Please fill out the form.", JOptionPane.OK_CANCEL_OPTION);
+        serialPanel.add(new JLabel("Select Serial Number"));
+
+        ResultSet set = query.getSensorSerialNumber();
+        List<String> list = new ArrayList<String>();
+
+        int count = 0;
+
+        while (set.next()) {
+            list.add(set.getString(1));
+
+        }
+
+        String[] a = new String[list.size()];
+        while (count < list.size()) {
+            a[count] = list.get(count);
+
+            count++;
+        }
+        JComboBox<Object> jComboBox1 = new javax.swing.JComboBox<>();
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(a));
+        serialPanel.add(jComboBox1);
+        serialPanel.add(new JLabel("New Serial Number:"));
+        serialPanel.add(inputNewSerial);
+
+        int result = JOptionPane.showConfirmDialog(null, serialPanel,
+                "Please fill out the form.", JOptionPane.OK_CANCEL_OPTION);
         if (result == JOptionPane.OK_OPTION) {
-            try{
+            try {
                 System.out.print(jComboBox1.getSelectedItem());
-            
+
                 query.updateSensor(jComboBox1.getSelectedItem().toString(), inputNewSerial.getText());
                 JOptionPane.showMessageDialog(this, "Sensor Successfully Updated");
-            }catch(Exception e){
-                JOptionPane.showMessageDialog(this, "No Sensors to Update");       
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "No Sensors to Update");
             }
-       }
+        }
         updateResults();
-   }
-    
-    private void filterButton(){
-         
-       JPanel serialPanel = new JPanel();
-       
-       UtilDateModel modelStartDate = new UtilDateModel();
-       UtilDateModel modelEndDate = new UtilDateModel();
+    }
+
+    private void dateFilter() {
+
+        JPanel serialPanel = new JPanel();
+
+        UtilDateModel modelStartDate = new UtilDateModel();
+        UtilDateModel modelEndDate = new UtilDateModel();
 
         //model.setDate(20,04,2014);
         // Need this...
@@ -702,7 +733,7 @@ public class dataPage extends javax.swing.JFrame {
         p.put("text.today", "Today");
         p.put("text.month", "Month");
         p.put("text.year", "Year");
-        
+
         JDatePanelImpl dateStartPanel = new JDatePanelImpl(modelStartDate, p);
         JDatePanelImpl dateEndPanel = new JDatePanelImpl(modelEndDate, p);
 
@@ -710,45 +741,41 @@ public class dataPage extends javax.swing.JFrame {
         serialPanel.add(new JLabel("Select Start Date"));
         JDatePickerImpl dateStartPicker = new JDatePickerImpl(dateStartPanel, new DateLabelFormatter());
         serialPanel.add(dateStartPicker);
-        
+
         serialPanel.add(new JLabel("Select End Date"));
         JDatePickerImpl dateEndPicker = new JDatePickerImpl(dateEndPanel, new DateLabelFormatter());
         serialPanel.add(dateEndPicker);
-        
-       
-       int result = JOptionPane.showConfirmDialog(null, serialPanel, 
-               "Please fill out the form.", JOptionPane.OK_CANCEL_OPTION);
+
+        int result = JOptionPane.showConfirmDialog(null, serialPanel,
+                "Please fill out the form.", JOptionPane.OK_CANCEL_OPTION);
         if (result == JOptionPane.OK_OPTION) {
-                        
+
             startDate = dateStartPicker.getJFormattedTextField().getText(); // Global Variable
             endDate = dateEndPicker.getJFormattedTextField().getText(); //   Global Variable
-            
-            String date = String.format("Start Date: %s End Date: %s", startDate,endDate);
+
+            String date = String.format("Start Date: %s End Date: %s", startDate, endDate);
             System.out.println(date);
-       }
+        }
         updateResults();
     }
 
-    
     private void exportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportButtonActionPerformed
 
-        try {                                             
+        try {
             JFileChooser chooser = new JFileChooser();
-            if(this.exportDefaultLocation != null){
-                try{
-                File file = new File(query.getExportLocation());
-                chooser.setCurrentDirectory(file);
-                }catch(Exception e){
+            if (this.exportDefaultLocation != null) {
+                try {
+                    File file = new File(query.getExportLocation());
+                    chooser.setCurrentDirectory(file);
+                } catch (Exception e) {
                     ;
                 }
             }
             int chooserValue = chooser.showSaveDialog(this);
             if (chooserValue == JFileChooser.APPROVE_OPTION) {
-         
-           
-                    statusField.setText("Saved " + chooser.getSelectedFile().getAbsolutePath());
-                
-               
+
+                statusField.setText("Saved " + chooser.getSelectedFile().getAbsolutePath());
+
             }
             Writer writer = null;
             DefaultTableModel dtm = (DefaultTableModel) rawTable.getModel();
@@ -756,22 +783,26 @@ public class dataPage extends javax.swing.JFrame {
             int nCol = dtm.getColumnCount();
             File outputfile = chooser.getSelectedFile();
             try {
-                writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputfile.getAbsolutePath()+".csv"), "UTF-8"));
-                
+                writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputfile.getAbsolutePath() + ".csv"), "UTF-8"));
+
                 //write the header information
                 StringBuffer bufferHeader = new StringBuffer();
                 for (int j = 0; j < nCol; j++) {
                     bufferHeader.append(dtm.getColumnName(j));
-                    if (j!=nCol) bufferHeader.append(", ");
+                    if (j != nCol) {
+                        bufferHeader.append(", ");
+                    }
                 }
                 writer.write(bufferHeader.toString() + "\r\n");
-                
+
                 //write row information
-                for (int i = 0 ; i < nRow ; i++){
+                for (int i = 0; i < nRow; i++) {
                     StringBuffer buffer = new StringBuffer();
-                    for (int j = 0 ; j < nCol ; j++){
-                        buffer.append(dtm.getValueAt(i,j));
-                        if (j!=nCol) buffer.append(", ");
+                    for (int j = 0; j < nCol; j++) {
+                        buffer.append(dtm.getValueAt(i, j));
+                        if (j != nCol) {
+                            buffer.append(", ");
+                        }
                     }
                     writer.write(buffer.toString() + "\r\n");
                 }
@@ -782,7 +813,7 @@ public class dataPage extends javax.swing.JFrame {
             } catch (IOException ex) {
                 Logger.getLogger(dataPage.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
             writer.close();
             JOptionPane.showMessageDialog(this, "File was Exported Correctly");
             this.exportDefaultLocation = outputfile.getParent();
@@ -791,14 +822,54 @@ public class dataPage extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(dataPage.class.getName()).log(Level.SEVERE, null, ex);
         }
-       
 
     }//GEN-LAST:event_exportButtonActionPerformed
 
+    private void timeFilter() {
+        JPanel timePanel = new JPanel();
+
+        SpinnerModel startModel = new SpinnerDateModel();
+        SpinnerModel endModel = new SpinnerDateModel();
+        
+        JSpinner timeStartSpinner = new JSpinner(startModel);
+        JSpinner timeEndSpinner = new JSpinner(endModel);
+
+        
+        JComponent startEditor = new JSpinner.DateEditor(timeStartSpinner, "HH:00:00");
+        timePanel.add(new JLabel("Start Time"));
+        timeStartSpinner.setEditor(startEditor);
+        timePanel.add(timeStartSpinner);
+
+        
+        JComponent endEditor = new JSpinner.DateEditor(timeEndSpinner,"HH:00:00");
+        timePanel.add(new JLabel("End Time"));
+        timeEndSpinner.setEditor(endEditor);
+        timePanel.add(timeEndSpinner);
+
+
+        int result = JOptionPane.showConfirmDialog(null, timePanel,
+                "Please fill out the form.", JOptionPane.OK_CANCEL_OPTION);
+        
+        if (result == JOptionPane.OK_OPTION) {
+            try {
+                timeStartSpinner.commitEdit();
+                timeEndSpinner.commitEdit();            
+            } catch (java.text.ParseException e) {
+            }
+            
+            startTime  = new SimpleDateFormat("HH:00:00").format(timeStartSpinner.getValue());
+            endTime = new SimpleDateFormat("HH:00:00").format(timeEndSpinner.getValue());
+            
+           String time = String.format("Start Time: %s End Time: %s", startTime, endTime);
+           System.out.println(time);
+
+        }
+        updateResults();
+    }
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         addSensor();
         updateResults();
-        
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -812,11 +883,11 @@ public class dataPage extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(dataPage.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void updateSensorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateSensorButtonActionPerformed
-    
+
     }//GEN-LAST:event_updateSensorButtonActionPerformed
 
     private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
@@ -829,12 +900,12 @@ public class dataPage extends javax.swing.JFrame {
 
     private void fillterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillterButtonActionPerformed
         // TODO add your handling code here:
-        filterButton();
+        dateFilter();
     }//GEN-LAST:event_fillterButtonActionPerformed
 
     private void updateSensorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateSensorActionPerformed
         // TODO add your handling code here:
-            try {
+        try {
             // TODO add your handling code here:
             updateSensor();
         } catch (SQLException ex) {
@@ -842,6 +913,11 @@ public class dataPage extends javax.swing.JFrame {
         }
         updateResults();
     }//GEN-LAST:event_updateSensorActionPerformed
+
+    private void timeFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_timeFilterActionPerformed
+        // TODO add your handling code here:
+        timeFilter();
+    }//GEN-LAST:event_timeFilterActionPerformed
     private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // textArea.setText("");
         // statusField.setText("New file");
@@ -854,6 +930,7 @@ public class dataPage extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel22;
@@ -885,9 +962,9 @@ public class dataPage extends javax.swing.JFrame {
     private float average;
     private float low;
     private float high;
-    
+
     private JLabel headerLabel;
     private JLabel statusLabel;
     private JPanel controlPanel;
-    
+
 }
