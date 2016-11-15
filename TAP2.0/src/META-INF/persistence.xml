@@ -3,7 +3,6 @@
   <persistence-unit name="tapPU" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>GUI.Sensor</class>
-    <class>GUI.Location</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/tap"/>
       <property name="javax.persistence.jdbc.user" value="postgres"/>

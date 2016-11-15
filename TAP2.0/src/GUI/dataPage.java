@@ -75,9 +75,10 @@ public class dataPage extends javax.swing.JFrame {
     private String endDate;
     private String startTime;
     private String endTime;
-    private int timeDiff=0;
     private long dateDiff=0;
-    private ArrayList<String> loacationsToShow;
+    private int timeDiff=0;
+    
+    private ArrayList<String> locationsToShow ;
 
     /**
      * Creates new form dataPage
@@ -109,7 +110,7 @@ public class dataPage extends javax.swing.JFrame {
         endTime = "";
         startDate = "";
         endDate = "";
-        loacationsToShow = new ArrayList<String>();
+        locationsToShow  = new ArrayList<String>();
         updateResults();
         initComponents();
     }
@@ -139,7 +140,7 @@ public class dataPage extends javax.swing.JFrame {
                     return locations[i];
                 }
             };
-            query.filterTable(startDate, endDate, startTime, endTime, loacationsToShow);
+            query.filterTable(startDate, endDate, startTime, endTime, locationsToShow );
             ResultSet set = query.getAllTemp();// use the select query
             ResultSet copySet = set;//a copy so cursors dont get messed up.
             float sum = 0;
@@ -190,7 +191,15 @@ public class dataPage extends javax.swing.JFrame {
             jLabel4.setText(Float.toString(average));
             jLabel5.setText(Float.toString(low));
             jLabel6.setText(Float.toString(high));
+            int[] selected = jList1.getSelectedIndices();
             jList1.setModel(strings);
+            jList1.setSelectedIndices(selected);
+            List<String> values = jList1.getSelectedValuesList();
+            ArrayList<String> newlist = new ArrayList<>();
+            for(String location: values){
+               newlist.add(location);
+            }
+            locationsToShow = newlist;
         } catch (NullPointerException ex) {
             ;
         }
@@ -269,7 +278,6 @@ public class dataPage extends javax.swing.JFrame {
         rawTable.setFont(new java.awt.Font("Lucida Grande", 1, 12)); // NOI18N
         rawTable.setModel(results);
         rawTable.setToolTipText("");
-        rawTable.setShowGrid(true);
         jScrollPane1.setViewportView(rawTable);
         rawTable.getAccessibleContext().setAccessibleParent(rawTable);
 
@@ -320,6 +328,11 @@ public class dataPage extends javax.swing.JFrame {
         jLabel6.setText(highString);
 
         jList1.setModel(strings);
+        jList1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jList1MouseClicked(evt);
+            }
+        });
         jList1.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 jList1ValueChanged(evt);
@@ -366,28 +379,7 @@ public class dataPage extends javax.swing.JFrame {
                                 .addComponent(exportButton)
                                 .addGap(18, 18, 18)
                                 .addComponent(statusField, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 826, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(rawPanel2Layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel1)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel3))
-                                .addGap(18, 18, 18)
-                                .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel6)
-                                    .addComponent(jLabel5)
-                                    .addComponent(jLabel4)))
-                            .addGroup(rawPanel2Layout.createSequentialGroup()
-                                .addGap(38, 38, 38)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(rawPanel2Layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jButton6)
-                                    .addComponent(jButton7)))))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 826, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(rawPanel2Layout.createSequentialGroup()
                         .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButton2)
@@ -395,7 +387,28 @@ public class dataPage extends javax.swing.JFrame {
                             .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(233, 233, 233)
                         .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(306, 306, 306)))
+                .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(rawPanel2Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3))
+                        .addGap(18, 18, 18)
+                        .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel4)))
+                    .addGroup(rawPanel2Layout.createSequentialGroup()
+                        .addGap(38, 38, 38)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(rawPanel2Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton6)
+                            .addComponent(jButton7))))
                 .addContainerGap())
         );
         rawPanel2Layout.setVerticalGroup(
@@ -902,7 +915,7 @@ public class dataPage extends javax.swing.JFrame {
     }//GEN-LAST:event_updateSensorButtonActionPerformed
 
     private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
-        // TODO add your handling code here:
+       
     }//GEN-LAST:event_jList1ValueChanged
 
     private void jLabel4PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jLabel4PropertyChange
@@ -933,6 +946,10 @@ public class dataPage extends javax.swing.JFrame {
             Logger.getLogger(dataPage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_dateFilterActionPerformed
+
+    private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseClicked
+        updateResults();
+    }//GEN-LAST:event_jList1MouseClicked
     private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // textArea.setText("");
         // statusField.setText("New file");

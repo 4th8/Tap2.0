@@ -43,7 +43,6 @@ public class dbQuery {
         if(!locations.isEmpty()){
             query += " AND location.full_name = '";
             int x = locations.size();
-            System.out.println("Size  is: " + x);
             for(int i = 0; i < x; i++){
                 if(i == 0){
                     query += locations.get(i) + "'";
@@ -54,7 +53,6 @@ public class dbQuery {
             }
         }        
         this.tableQuery = query +";";
-        System.out.println(tableQuery);
     }
     
     public void insertLocation(String serialNumber, String name, String abb) {
