@@ -29,34 +29,32 @@ public class dbQuery {
 
     private String tableQuery;
     
-    public void filterTable(ArrayList<String> locations){
-        String query =  "SELECT temperature.time_stamp, temperature.degrees_c, location.abbreviation FROM temperature JOIN location on temperature.location_id = location.location_id WHERE location.abbreviation = ";
-        for(String f: locations){
-            query += "OR ";
-            query += f;
-        }
-        this.tableQuery = query;
-    }
-    
-    public void filterTable(ArrayList<String> locations, String startDate, String endDate){
-        String query =  "SELECT temperature.time_stamp, temperature.degrees_c, location.abbreviation FROM temperature JOIN location on temperature.location_id = location.location_id WHERE location.abbreviation = ";
-        for(String f: locations){
-            query += "OR ";
-            query += f;
-        }
+
+    public void filterTable(String startDate, String endDate, String startTime, String endTime, ArrayList<String> locations){
+        String query =  "SELECT temperature.time_stamp, temperature.degrees_c, location.abbreviation FROM temperature JOIN location on temperature.location_id = location.location_id";
         if(!startDate.equals(""))
-            query += "AND temperature.time_stamp >" + startDate;
+            query += " AND temperature.time_stamp > '" + startDate + "'";
         if(!endDate.equals(""))
-            query += "AND temperature.time_stamp <" + endDate;
-        this.tableQuery = query;
-    }
-    public void filterTable(String startDate, String endDate){
-        String query =  "SELECT temperature.time_stamp, temperature.degrees_c, location.abbreviation FROM temperature JOIN location on temperature.location_id = location.location_id WHERE location.abbreviation = ";
-        if(!startDate.equals(""))
-            query += "AND temperature.time_stamp >" + startDate;
-        if(!endDate.equals(""))
-            query += "AND temperature.time_stamp <" + endDate;
-        this.tableQuery = query;
+            query += " AND temperature.time_stamp < '" + endDate + "'";
+         if(!startTime.equals(""))
+            query += " AND EXTRACT(hour from temperature.time_stamp) >= '" + startTime + "'";
+        if(!endTime.equals(""))
+            query +=  " AND EXTRACT(hour from temperature.time_stamp) <= '" + endTime +"'";
+        if(!locations.isEmpty()){
+            query += " AND location.full_name = '";
+            int x = locations.size();
+            System.out.println("Size  is: " + x);
+            for(int i = 0; i < x; i++){
+                if(i == 0){
+                    query += locations.get(i) + "'";
+                }
+                else{
+                    query += " OR location.full_name = '" + locations.get(i) + "'";
+                }
+            }
+        }        
+        this.tableQuery = query +";";
+        System.out.println(tableQuery);
     }
     
     public void insertLocation(String serialNumber, String name, String abb) {
@@ -232,8 +230,14 @@ public class dbQuery {
         return ans;
     }
     public ResultSet getAllTemp(){
-        
-            String All_Location_Field = "SELECT temperature.time_stamp, temperature.degrees_c, location.abbreviation FROM temperature JOIN location on temperature.location_id = location.location_id;";
+            String All_Location_Field;
+            if(this.tableQuery == null){
+                All_Location_Field = "SELECT temperature.time_stamp, temperature.degrees_c, location.abbreviation FROM temperature JOIN location on temperature.location_id = location.location_id;";
+            }
+            else{
+                All_Location_Field = tableQuery;
+            }
+            
             ResultSet result = null;
         try {    
             database.executeSelect(All_Location_Field);
