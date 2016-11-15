@@ -70,8 +70,9 @@ public class dataPage extends javax.swing.JFrame {
     private javax.swing.AbstractListModel<String> strings;
     private String startDate;
     private String endDate;
-    private String startTime = "00:00:00";
-    private String endTime = "23:00:00";
+    private String startTime;
+    private String endTime;
+    private ArrayList<String> loacationsToShow;
 
     /**
      * Creates new form dataPage
@@ -99,6 +100,11 @@ public class dataPage extends javax.swing.JFrame {
         } catch (dbQuery.noExportLocationException ex) {
             this.exportDefaultLocation = null;
         }
+        startTime = "";
+        endTime = "";
+        startDate = "";
+        endDate = "";
+        loacationsToShow = new ArrayList<String>();
         updateResults();
         initComponents();
     }
@@ -106,7 +112,7 @@ public class dataPage extends javax.swing.JFrame {
     /*
     This should allow the user to sort the results shown on the screen.
     It will 
-     */
+    */
     private void updateResults() {
         try {
 
@@ -128,7 +134,7 @@ public class dataPage extends javax.swing.JFrame {
                     return locations[i];
                 }
             };
-
+            query.filterTable(startDate, endDate, startTime, endTime, loacationsToShow);
             ResultSet set = query.getAllTemp();// use the select query
             ResultSet copySet = set;//a copy so cursors dont get messed up.
             float sum = 0;
@@ -910,5 +916,4 @@ public class dataPage extends javax.swing.JFrame {
     private JLabel headerLabel;
     private JLabel statusLabel;
     private JPanel controlPanel;
-
 }
