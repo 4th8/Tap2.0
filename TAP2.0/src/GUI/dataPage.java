@@ -17,9 +17,12 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import static java.lang.Integer.parseInt;
+import static java.lang.Math.abs;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -72,6 +75,8 @@ public class dataPage extends javax.swing.JFrame {
     private String endDate;
     private String startTime;
     private String endTime;
+    private int timeDiff=0;
+    private long dateDiff=0;
     private ArrayList<String> loacationsToShow;
 
     /**
@@ -202,9 +207,6 @@ public class dataPage extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        tapPUEntityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("tapPU").createEntityManager();
-        locationQuery = java.beans.Beans.isDesignTime() ? null : tapPUEntityManager.createQuery("SELECT l FROM Location l");
-        locationList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : locationQuery.getResultList();
         jTabbedPane2 = new javax.swing.JTabbedPane();
         rawPanel2 = new javax.swing.JPanel();
         jLabel22 = new javax.swing.JLabel();
@@ -678,7 +680,7 @@ public class dataPage extends javax.swing.JFrame {
         updateResults();
     }
 
-    private void dateFilter() {
+    private void dateFilter() throws ParseException {
 
         JPanel serialPanel = new JPanel();
 
@@ -715,6 +717,45 @@ public class dataPage extends javax.swing.JFrame {
             System.out.println(date);
         }
         updateResults();
+        //String startDate1=startDate.substring(0,10);
+        //String endDate1=endDate.substring(0,10);
+        
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+          
+        Date d1 = null;
+	Date d2 = null;
+        
+        if(startDate.isEmpty()==true || startDate==null ){
+           
+            startDate="0000-00-00";
+          
+        }
+        if(endDate.isEmpty()==true || endDate==null){
+            
+            endDate="0000-00-00";
+          
+        }
+         
+
+        d1 = format.parse(startDate+" 00:00:00");
+        d2 = format.parse(endDate+" 00:00:00");
+        
+			
+        long diff = d2.getTime() - d1.getTime();
+        
+        //System.out.print(diff);
+        
+        //long diffSeconds = diff / 1000 % 60;
+        //long diffMinutes = diff / (60 * 1000) % 60;
+        //long diffHours = diff / (60 * 60 * 1000) % 24;
+        dateDiff = diff / (24 * 60 * 60 * 1000);
+        
+        
+//        System.out.print(diffDays + " days, ");
+//        System.out.print(diffHours + " hours, ");
+//	System.out.print(diffMinutes + " minutes, ");
+//	System.out.print(diffSeconds + " seconds.");
+        System.out.print(dateDiff + " days.");
     }
 
     private void exportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportButtonActionPerformed
@@ -822,7 +863,19 @@ public class dataPage extends javax.swing.JFrame {
            System.out.println(time);
 
         }
-        updateResults();
+        
+       startTime=startTime.substring(0,2);
+       endTime=endTime.substring(0,2);
+       
+       timeDiff=abs(parseInt(endTime)-parseInt(startTime));
+       
+       System.out.print(timeDiff);
+       System.out.print(startTime+endTime);
+        
+       
+       updateResults();
+       
+        
     }
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         addSensor();
@@ -873,8 +926,12 @@ public class dataPage extends javax.swing.JFrame {
     }//GEN-LAST:event_timeFilterActionPerformed
 
     private void dateFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dateFilterActionPerformed
-        // TODO add your handling code here:
-        dateFilter();
+        try {
+            // TODO add your handling code here:
+            dateFilter();
+        } catch (ParseException ex) {
+            Logger.getLogger(dataPage.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_dateFilterActionPerformed
     private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // textArea.setText("");
@@ -901,12 +958,9 @@ public class dataPage extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
-    private java.util.List<GUI.Location> locationList;
-    private javax.persistence.Query locationQuery;
     private javax.swing.JPanel rawPanel2;
     private javax.swing.JTable rawTable;
     private javax.swing.JTextField statusField;
-    private javax.persistence.EntityManager tapPUEntityManager;
     // End of variables declaration//GEN-END:variables
     private TableModel results;
     private float average;
