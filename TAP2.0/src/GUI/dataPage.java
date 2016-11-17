@@ -610,7 +610,21 @@ public class dataPage extends javax.swing.JFrame {
         int result = JOptionPane.showConfirmDialog(null, myPanel,
                 "Please fill out the form.", JOptionPane.OK_CANCEL_OPTION);
         if (result == JOptionPane.OK_OPTION) {
-            query.insertLocation(serialNumber, fullName.getText(), abb.getText());
+            if(fullName.getText().equals("") || fullName.getText().isEmpty()==true || fullName.getText()==null){
+                JOptionPane.showMessageDialog(this, "Must Fill in All Blank Areas First");
+                checkifopen=false;
+            
+            } 
+            else if(abb.getText().equals("") || abb.getText().isEmpty()==true || abb.getText()==null){
+                JOptionPane.showMessageDialog(this, "Must Fill in All Blank Areas First");
+                checkifopen=false;
+            }
+            
+            else{
+                query.insertLocation(serialNumber, fullName.getText(), abb.getText());
+            }
+            
+           
         }
         if (result == JOptionPane.CANCEL_OPTION) {
            checkifopen=false;
