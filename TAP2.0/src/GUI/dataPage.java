@@ -19,6 +19,7 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import static java.lang.Integer.parseInt;
 import static java.lang.Math.abs;
+import static java.lang.System.exit;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -504,6 +505,7 @@ public class dataPage extends javax.swing.JFrame {
         String serialNumber = "";
         String locationID = "";
         int num = 0;
+        boolean checkifopen=true;
         int chooserValue = chooser.showOpenDialog(this);
         if (chooserValue == JFileChooser.APPROVE_OPTION) {
             try {
@@ -523,7 +525,14 @@ public class dataPage extends javax.swing.JFrame {
                         try {
                             locationID = query.getLocationIdBySerialNumber(serialNumber);
                         } catch (dbQuery.NoLocationException ex) {
-                            addSensor(serialNumber);
+                            
+     
+                            if(addSensor(serialNumber,checkifopen)==false){
+                               // System.out.print(checkifopen);
+                                return;
+                            }
+                            checkifopen=true;
+        
                         }
                     }
                 } else {
@@ -588,7 +597,7 @@ public class dataPage extends javax.swing.JFrame {
         updateResults();
     }
 
-    private void addSensor(String serialNumber) {
+    private boolean addSensor(String serialNumber,boolean checkifopen) {
         JTextField fullName = new JTextField(5);
         JTextField abb = new JTextField(3);
 
@@ -603,8 +612,17 @@ public class dataPage extends javax.swing.JFrame {
         if (result == JOptionPane.OK_OPTION) {
             query.insertLocation(serialNumber, fullName.getText(), abb.getText());
         }
+        if (result == JOptionPane.CANCEL_OPTION) {
+           checkifopen=false;
+           
+        }
+         
+        
+        
         
         updateResults();
+        //System.out.print(checkifopen);
+        return checkifopen;
     }
 
     private void removeSensor() throws SQLException {
