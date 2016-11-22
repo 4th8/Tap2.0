@@ -77,7 +77,7 @@ public class dataPage extends javax.swing.JFrame {
     private String startTime;
     private String endTime;
     private long dateDiff=0;
-    private int timeDiff=0;
+    private int timeDiff=24;
     private String checkText;
     
     private ArrayList<String> locationsToShow ;
@@ -188,10 +188,10 @@ public class dataPage extends javax.swing.JFrame {
             End Snippet
              */
             results = new DefaultTableModel(rows, columnNames);
-            double expected = (double)dateDiff * 24.0;
+            double expected = (double)dateDiff * timeDiff * this.locationsToShow.size();
             double percent = ((double)count / expected) * 100.0;
-            System.out.println(expected);
             checkText = Double.toString(percent) + "%";
+            
 
         } catch (SQLException e) {
         }
@@ -200,6 +200,7 @@ public class dataPage extends javax.swing.JFrame {
             jLabel4.setText(Float.toString(average));
             jLabel5.setText(Float.toString(low));
             jLabel6.setText(Float.toString(high));
+            jLabel7.setText(checkText);
             int[] selected = jList1.getSelectedIndices();
             jList1.setModel(strings);
             jList1.setSelectedIndices(selected);
@@ -778,7 +779,7 @@ public class dataPage extends javax.swing.JFrame {
             String date = String.format("Start Date: %s End Date: %s", startDate, endDate);
             System.out.println(date);
         }
-        updateResults();
+        
         //String startDate1=startDate.substring(0,10);
         //String endDate1=endDate.substring(0,10);
         
@@ -811,12 +812,17 @@ public class dataPage extends javax.swing.JFrame {
         //long diffMinutes = diff / (60 * 1000) % 60;
         //long diffHours = diff / (60 * 60 * 1000) % 24;
         dateDiff = diff / (24 * 60 * 60 * 1000);
+        if(this.startDate.equals(this.endDate) && (this.endDate.isEmpty()!= true || this.endDate != null)&& (this.startDate.isEmpty()!= true || this.startDate != null)){
+            dateDiff = 1;
+        }
+        
         
         
 //        System.out.print(diffDays + " days, ");
 //        System.out.print(diffHours + " hours, ");
 //	System.out.print(diffMinutes + " minutes, ");
 //	System.out.print(diffSeconds + " seconds.");
+        updateResults();
         System.out.print(dateDiff + " days.");
     }
 
@@ -936,8 +942,6 @@ public class dataPage extends javax.swing.JFrame {
         
        
        updateResults();
-       
-        
     }
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         addSensor();
