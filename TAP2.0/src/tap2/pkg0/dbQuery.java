@@ -39,12 +39,13 @@ public class dbQuery {
         }
         if(endDate.isEmpty()==true || endDate==null || endDate.equals("0000-00-00")){
             
-            endDate="3000-01-01";
+            endDate="3000-01-01";//This should be the lateist date in the database.
+            
           
         }
         String query =  "SELECT temperature.time_stamp, temperature.degrees_c, location.abbreviation FROM temperature JOIN location on temperature.location_id = location.location_id";
         if(!startDate.equals(""))
-            query += " AND temperature.time_stamp > '" + startDate + "'";
+            query += " AND temperature.time_stamp >= '" + startDate + "'";
         if(!endDate.equals(""))
             query += " AND temperature.time_stamp < '" + endDate + "'";
          if(!startTime.equals(""))
