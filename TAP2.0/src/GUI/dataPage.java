@@ -5,47 +5,38 @@
  */
 package GUI;
 
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import static java.lang.Integer.parseInt;
 import static java.lang.Math.abs;
-import static java.lang.System.exit;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
 import java.util.Vector;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
@@ -163,7 +154,7 @@ public class dataPage extends javax.swing.JFrame {
             high = 0;
             low = 0;
             average = 0;
-            while (set.next()) {
+            while (set.next()) {                
                 float value = set.getFloat("degrees_c");
                 count++;
                 sum += value;
@@ -191,7 +182,10 @@ public class dataPage extends javax.swing.JFrame {
             double expected = (double)dateDiff * timeDiff * this.locationsToShow.size();
             double percent = ((double)count / expected) * 100.0;
             checkText = Double.toString(percent) + "%";
-            
+            endDate = query.getMaxDate(startDate, endDate, startTime, endTime, locationsToShow);
+            startDate = query.getMinDate(startDate, endDate, startTime, endTime, locationsToShow);
+            System.out.println("StartDate: "+ startDate);
+            System.out.println("EndDate: " + endDate);
 
         } catch (SQLException e) {
         }
