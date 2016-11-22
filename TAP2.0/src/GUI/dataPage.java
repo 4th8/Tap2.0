@@ -78,6 +78,7 @@ public class dataPage extends javax.swing.JFrame {
     private String endTime;
     private long dateDiff=0;
     private int timeDiff=0;
+    private String checkText;
     
     private ArrayList<String> locationsToShow ;
 
@@ -88,6 +89,7 @@ public class dataPage extends javax.swing.JFrame {
      */
     public dataPage(dbQuery query) {
         this.query = query;
+        this.checkText = "";
         try {
             this.importDefaultLocation = query.getImportLocation();
             this.exportDefaultLocation = query.getExportLocation();
@@ -145,7 +147,8 @@ public class dataPage extends javax.swing.JFrame {
             ResultSet set = query.getAllTemp();// use the select query
             ResultSet copySet = set;//a copy so cursors dont get messed up.
             float sum = 0;
-            float count = 0;
+            float count;
+            count = 0;
             ResultSetMetaData metaData = set.getMetaData();
             int numberOfColumns = metaData.getColumnCount();
             Vector columnNames = new Vector();
@@ -172,6 +175,7 @@ public class dataPage extends javax.swing.JFrame {
                 if (value < low) {
                     low = value;
                 }
+                
                 Vector newRow = new Vector();
 
                 for (int i = 1; i <= numberOfColumns; i++) {
@@ -184,6 +188,10 @@ public class dataPage extends javax.swing.JFrame {
             End Snippet
              */
             results = new DefaultTableModel(rows, columnNames);
+            double expected = (double)dateDiff * 24.0;
+            double percent = ((double)count / expected) * 100.0;
+            System.out.println(expected);
+            checkText = Double.toString(percent) + "%";
 
         } catch (SQLException e) {
         }
@@ -239,6 +247,7 @@ public class dataPage extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -368,30 +377,22 @@ public class dataPage extends javax.swing.JFrame {
             }
         });
 
+        jLabel7.setText(checkText);
+
         javax.swing.GroupLayout rawPanel2Layout = new javax.swing.GroupLayout(rawPanel2);
         rawPanel2.setLayout(rawPanel2Layout);
         rawPanel2Layout.setHorizontalGroup(
             rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(rawPanel2Layout.createSequentialGroup()
+                .addContainerGap(165, Short.MAX_VALUE)
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(rawPanel2Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rawPanel2Layout.createSequentialGroup()
-                                .addComponent(importButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(exportButton)
-                                .addGap(18, 18, 18)
-                                .addComponent(statusField, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 826, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(rawPanel2Layout.createSequentialGroup()
-                        .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton2)
-                            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(233, 233, 233)
-                        .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(306, 306, 306)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rawPanel2Layout.createSequentialGroup()
+                        .addComponent(importButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(exportButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(statusField, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 826, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(rawPanel2Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
@@ -414,6 +415,16 @@ public class dataPage extends javax.swing.JFrame {
                             .addComponent(jButton6)
                             .addComponent(jButton7))))
                 .addContainerGap())
+            .addGroup(rawPanel2Layout.createSequentialGroup()
+                .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton2)
+                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(233, 233, 233)
+                .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel7)
+                .addGap(134, 134, 134))
         );
         rawPanel2Layout.setVerticalGroup(
             rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -427,7 +438,10 @@ public class dataPage extends javax.swing.JFrame {
                         .addComponent(jButton1))
                     .addGroup(rawPanel2Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(rawPanel2Layout.createSequentialGroup()
+                        .addGap(45, 45, 45)
+                        .addComponent(jLabel7)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(importButton)
@@ -516,7 +530,6 @@ public class dataPage extends javax.swing.JFrame {
                 Scanner fin;
                 fin = new Scanner(chooser.getSelectedFile());
                 String filename = chooser.getSelectedFile().getName();
-                System.out.println(chooser.getSelectedFile().getPath());
                 if (!filename.endsWith(".csv")) {
                     throw new NotCSVException();
                 }
@@ -546,6 +559,7 @@ public class dataPage extends javax.swing.JFrame {
                 } else {
                     System.out.println("You meesed up.\n" + filename);
                 }
+                
                 while (fin.hasNext()) {
                     String rawline = fin.nextLine();
                     String[] line = rawline.split(",");
@@ -1009,6 +1023,7 @@ public class dataPage extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JList<String> jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
