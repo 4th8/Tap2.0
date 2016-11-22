@@ -67,6 +67,100 @@ public class dbQuery {
         this.tableQuery = query +";";
     }
     
+    public String getMaxDate(String startDate, String endDate, String startTime, String endTime, ArrayList<String> locations){
+        
+        if(startDate.isEmpty()==true || startDate==null || startDate.equals("0000-00-00") ){
+           
+            startDate="2000-01-01";
+          
+        }
+        if(endDate.isEmpty()==true || endDate==null || endDate.equals("0000-00-00")){
+            
+            endDate="3000-01-01";//This should be the lateist date in the database.
+            
+          
+        }
+        
+        String query =  "SELECT MAX(temperature.time_stamp) FROM temperature JOIN location on temperature.location_id = location.location_id";
+        if(!startDate.equals(""))
+            query += " AND temperature.time_stamp >= '" + startDate + "'";
+        if(!endDate.equals(""))
+            query += " AND temperature.time_stamp < '" + endDate + "'";
+         if(!startTime.equals(""))
+            query += " AND EXTRACT(hour from temperature.time_stamp) >= '" + startTime + "'";
+        if(!endTime.equals(""))
+            query +=  " AND EXTRACT(hour from temperature.time_stamp) <= '" + endTime +"'";
+        if(!locations.isEmpty()){
+            query += " AND location.full_name = '";
+            int x = locations.size();
+            for(int i = 0; i < x; i++){
+                if(i == 0){
+                    query += locations.get(i) + "'";
+                }
+                else{
+                    query += " OR location.full_name = '" + locations.get(i) + "'";
+                }
+            }
+        }        
+        this.tableQuery = query +";";
+        try {
+            ResultSet  set = database.executeSelect(tableQuery);
+            set.next();
+            return set.getString(1);
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(dbQuery.class.getName()).log(Level.SEVERE, null, ex);
+            return "";
+        }
+        
+    }
+    public String getMinDate(String startDate, String endDate, String startTime, String endTime, ArrayList<String> locations){
+        
+        if(startDate.isEmpty()==true || startDate==null || startDate.equals("0000-00-00") ){
+           
+            startDate="2000-01-01";
+          
+        }
+        if(endDate.isEmpty()==true || endDate==null || endDate.equals("0000-00-00")){
+            
+            endDate="3000-01-01";//This should be the lateist date in the database.
+            
+          
+        }
+        
+        String query =  "SELECT MIN(temperature.time_stamp) FROM temperature JOIN location on temperature.location_id = location.location_id";
+        if(!startDate.equals(""))
+            query += " AND temperature.time_stamp >= '" + startDate + "'";
+        if(!endDate.equals(""))
+            query += " AND temperature.time_stamp < '" + endDate + "'";
+         if(!startTime.equals(""))
+            query += " AND EXTRACT(hour from temperature.time_stamp) >= '" + startTime + "'";
+        if(!endTime.equals(""))
+            query +=  " AND EXTRACT(hour from temperature.time_stamp) <= '" + endTime +"'";
+        if(!locations.isEmpty()){
+            query += " AND location.full_name = '";
+            int x = locations.size();
+            for(int i = 0; i < x; i++){
+                if(i == 0){
+                    query += locations.get(i) + "'";
+                }
+                else{
+                    query += " OR location.full_name = '" + locations.get(i) + "'";
+                }
+            }
+        }        
+        this.tableQuery = query +";";
+        try {
+            ResultSet  set = database.executeSelect(tableQuery);
+            set.next();
+            return set.getString(1);
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(dbQuery.class.getName()).log(Level.SEVERE, null, ex);
+            return "";
+        }
+    }
+    
     public void insertLocation(String serialNumber, String name, String abb) {
         String insertIntoLocation = String.format("INSERT INTO location (full_name,abbreviation)VALUES ('%s', '%s');", name, abb);
         try {
