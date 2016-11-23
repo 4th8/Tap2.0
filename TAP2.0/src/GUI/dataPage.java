@@ -70,8 +70,11 @@ public class dataPage extends javax.swing.JFrame {
     private long dateDiff=0;
     private int timeDiff=24;
     private String checkText;
+    private String sDate = "";
+    private String eDate = "";
     
     private ArrayList<String> locationsToShow ;
+  
 
     /**
      * Creates new form dataPage
@@ -154,8 +157,13 @@ public class dataPage extends javax.swing.JFrame {
             high = 0;
             low = 0;
             average = 0;
+            
+            ArrayList<Date> timeStampList = new ArrayList<Date>();
             while (set.next()) {                
                 float value = set.getFloat("degrees_c");
+                
+             
+                timeStampList.add(set.getDate("time_stamp"));
                 count++;
                 sum += value;
                 average = sum / count;
@@ -175,6 +183,12 @@ public class dataPage extends javax.swing.JFrame {
 
                 rows.addElement(newRow);
             }
+            if(timeStampList.size() >0){
+            sDate = timeStampList.get(0).toString();
+            eDate = timeStampList.get(timeStampList.size()-1).toString(); 
+            }
+            System.out.println("Start Date: " + sDate);  
+            System.out.println("End Date: " + eDate); 
             /*
             End Snippet
              */
@@ -182,10 +196,10 @@ public class dataPage extends javax.swing.JFrame {
             double expected = (double)dateDiff * timeDiff * this.locationsToShow.size();
             double percent = ((double)count / expected) * 100.0;
             checkText = Double.toString(percent) + "%";
-            endDate = query.getMaxDate(startDate, endDate, startTime, endTime, locationsToShow);
-            startDate = query.getMinDate(startDate, endDate, startTime, endTime, locationsToShow);
-            System.out.println("StartDate: "+ startDate);
-            System.out.println("EndDate: " + endDate);
+//            endDate = query.getMaxDate(startDate, endDate, startTime, endTime, locationsToShow);
+//            startDate = query.getMinDate(startDate, endDate, startTime, endTime, locationsToShow);
+//            System.out.println("StartDate: "+ startDate);
+//            System.out.println("EndDate: " + endDate);
 
         } catch (SQLException e) {
         }
@@ -743,8 +757,12 @@ public class dataPage extends javax.swing.JFrame {
 
         UtilDateModel modelStartDate = new UtilDateModel();
         UtilDateModel modelEndDate = new UtilDateModel();
-
-        //model.setDate(20,04,2014);
+        
+       System.out.println(sDate.substring(5,7));
+        modelStartDate.setDate(Integer.parseInt((sDate.substring(0, 4))),
+                (Integer.parseInt((sDate.substring(5, 7)))-1), Integer.parseInt((sDate.substring(8, 10))));
+        modelEndDate.setDate(Integer.parseInt((eDate.substring(0, 4))),
+         (Integer.parseInt((eDate.substring(5, 7)))-1), Integer.parseInt((eDate.substring(8, 10))));
         // Need this...
         Properties p = new Properties();
         p.put("text.today", "Today");
