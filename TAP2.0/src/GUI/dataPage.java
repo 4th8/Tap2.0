@@ -67,14 +67,13 @@ public class dataPage extends javax.swing.JFrame {
     private String endDate;
     private String startTime;
     private String endTime;
-    private long dateDiff=0;
-    private int timeDiff=24;
+    private long dateDiff = 0;
+    private int timeDiff = 24;
     private String checkText;
     private String sDate = "";
     private String eDate = "";
-    
-    private ArrayList<String> locationsToShow ;
-  
+
+    private ArrayList<String> locationsToShow;
 
     /**
      * Creates new form dataPage
@@ -107,7 +106,7 @@ public class dataPage extends javax.swing.JFrame {
         endTime = "";
         startDate = "";
         endDate = "";
-        locationsToShow  = new ArrayList<String>();
+        locationsToShow = new ArrayList<String>();
         updateResults();
         initComponents();
     }
@@ -115,7 +114,7 @@ public class dataPage extends javax.swing.JFrame {
     /*
     This should allow the user to sort the results shown on the screen.
     It will 
-    */
+     */
     private void updateResults() {
         try {
 
@@ -137,7 +136,7 @@ public class dataPage extends javax.swing.JFrame {
                     return locations[i];
                 }
             };
-            query.filterTable(startDate, endDate, startTime, endTime, locationsToShow );
+            query.filterTable(startDate, endDate, startTime, endTime, locationsToShow);
             ResultSet set = query.getAllTemp();// use the select query
             ResultSet copySet = set;//a copy so cursors dont get messed up.
             float sum = 0;
@@ -157,12 +156,11 @@ public class dataPage extends javax.swing.JFrame {
             high = 0;
             low = 0;
             average = 0;
-            
+
             ArrayList<Date> timeStampList = new ArrayList<Date>();
-            while (set.next()) {                
+            while (set.next()) {
                 float value = set.getFloat("degrees_c");
-                
-             
+
                 timeStampList.add(set.getDate("time_stamp"));
                 count++;
                 sum += value;
@@ -174,7 +172,7 @@ public class dataPage extends javax.swing.JFrame {
                 if (value < low) {
                     low = value;
                 }
-                
+
                 Vector newRow = new Vector();
 
                 for (int i = 1; i <= numberOfColumns; i++) {
@@ -183,18 +181,18 @@ public class dataPage extends javax.swing.JFrame {
 
                 rows.addElement(newRow);
             }
-            if(timeStampList.size() >0){
-            sDate = timeStampList.get(0).toString();
-            eDate = timeStampList.get(timeStampList.size()-1).toString(); 
+            if (timeStampList.size() > 0) {
+                sDate = timeStampList.get(0).toString();
+                eDate = timeStampList.get(timeStampList.size() - 1).toString();
             }
-            System.out.println("Start Date: " + sDate);  
-            System.out.println("End Date: " + eDate); 
+            System.out.println("Start Date: " + sDate);
+            System.out.println("End Date: " + eDate);
             /*
             End Snippet
              */
             results = new DefaultTableModel(rows, columnNames);
-            double expected = (double)dateDiff * timeDiff * this.locationsToShow.size();
-            double percent = ((double)count / expected) * 100.0;
+            double expected = (double) dateDiff * timeDiff * this.locationsToShow.size();
+            double percent = ((double) count / expected) * 100.0;
             checkText = Double.toString(percent) + "%";
 //            endDate = query.getMaxDate(startDate, endDate, startTime, endTime, locationsToShow);
 //            startDate = query.getMinDate(startDate, endDate, startTime, endTime, locationsToShow);
@@ -214,8 +212,8 @@ public class dataPage extends javax.swing.JFrame {
             jList1.setSelectedIndices(selected);
             List<String> values = jList1.getSelectedValuesList();
             ArrayList<String> newlist = new ArrayList<>();
-            for(String location: values){
-               newlist.add(location);
+            for (String location : values) {
+                newlist.add(location);
             }
             locationsToShow = newlist;
         } catch (NullPointerException ex) {
@@ -531,7 +529,7 @@ public class dataPage extends javax.swing.JFrame {
         String serialNumber = "";
         String locationID = "";
         int num = 0;
-        boolean checkifopen=true;
+        boolean checkifopen = true;
         int chooserValue = chooser.showOpenDialog(this);
         if (chooserValue == JFileChooser.APPROVE_OPTION) {
             try {
@@ -550,14 +548,13 @@ public class dataPage extends javax.swing.JFrame {
                         try {
                             locationID = query.getLocationIdBySerialNumber(serialNumber);
                         } catch (dbQuery.NoLocationException ex) {
-                            
-     
-                            if(addSensor(serialNumber,checkifopen)==false){
-                               // System.out.print(checkifopen);
+
+                            if (addSensor(serialNumber, checkifopen) == false) {
+                                // System.out.print(checkifopen);
                                 return;
                             }
-                            checkifopen=true;
-        
+                            checkifopen = true;
+
                         }
                     }
                 } else {
@@ -568,7 +565,7 @@ public class dataPage extends javax.swing.JFrame {
                 } else {
                     System.out.println("You meesed up.\n" + filename);
                 }
-                
+
                 while (fin.hasNext()) {
                     String rawline = fin.nextLine();
                     String[] line = rawline.split(",");
@@ -623,12 +620,12 @@ public class dataPage extends javax.swing.JFrame {
         updateResults();
     }
 
-    private boolean addSensor(String serialNumber,boolean checkifopen) {
+    private boolean addSensor(String serialNumber, boolean checkifopen) {
         JTextField fullName = new JTextField(5);
         JTextField abb = new JTextField(3);
 
         JPanel myPanel = new JPanel();
-       
+
         myPanel.add(new JLabel("Location Name:"));
         myPanel.add(fullName);
         myPanel.add(new JLabel("Location abbreviation:"));
@@ -636,30 +633,23 @@ public class dataPage extends javax.swing.JFrame {
         int result = JOptionPane.showConfirmDialog(null, myPanel,
                 "Please fill out the form.", JOptionPane.OK_CANCEL_OPTION);
         if (result == JOptionPane.OK_OPTION) {
-            if(fullName.getText().equals("") || fullName.getText().isEmpty()==true || fullName.getText()==null){
+            if (fullName.getText().equals("") || fullName.getText().isEmpty() == true || fullName.getText() == null) {
                 JOptionPane.showMessageDialog(this, "Must Fill in All Blank Areas First");
-                checkifopen=false;
-            
-            } 
-            else if(abb.getText().equals("") || abb.getText().isEmpty()==true || abb.getText()==null){
+                checkifopen = false;
+
+            } else if (abb.getText().equals("") || abb.getText().isEmpty() == true || abb.getText() == null) {
                 JOptionPane.showMessageDialog(this, "Must Fill in All Blank Areas First");
-                checkifopen=false;
-            }
-            
-            else{
+                checkifopen = false;
+            } else {
                 query.insertLocation(serialNumber, fullName.getText(), abb.getText());
             }
-            
-           
+
         }
         if (result == JOptionPane.CANCEL_OPTION) {
-           checkifopen=false;
-           
+            checkifopen = false;
+
         }
-         
-        
-        
-        
+
         updateResults();
         //System.out.print(checkifopen);
         return checkifopen;
@@ -753,16 +743,18 @@ public class dataPage extends javax.swing.JFrame {
 
     private void dateFilter() throws ParseException {
 
+        String startD = "";
+        String endD = "";
         JPanel serialPanel = new JPanel();
 
         UtilDateModel modelStartDate = new UtilDateModel();
         UtilDateModel modelEndDate = new UtilDateModel();
-        
-       System.out.println(sDate.substring(5,7));
+
+        System.out.println(sDate.substring(5, 7));
         modelStartDate.setDate(Integer.parseInt((sDate.substring(0, 4))),
-                (Integer.parseInt((sDate.substring(5, 7)))-1), Integer.parseInt((sDate.substring(8, 10))));
+                (Integer.parseInt((sDate.substring(5, 7))) - 1), Integer.parseInt((sDate.substring(8, 10))));
         modelEndDate.setDate(Integer.parseInt((eDate.substring(0, 4))),
-         (Integer.parseInt((eDate.substring(5, 7)))-1), Integer.parseInt((eDate.substring(8, 10))));
+                (Integer.parseInt((eDate.substring(5, 7))) - 1), Integer.parseInt((eDate.substring(8, 10))));
         // Need this...
         Properties p = new Properties();
         p.put("text.today", "Today");
@@ -785,57 +777,51 @@ public class dataPage extends javax.swing.JFrame {
                 "Please fill out the form.", JOptionPane.OK_CANCEL_OPTION);
         if (result == JOptionPane.OK_OPTION) {
 
-            startDate = dateStartPicker.getJFormattedTextField().getText(); // Global Variable
-            endDate = dateEndPicker.getJFormattedTextField().getText(); //   Global Variable
+            startD = dateStartPicker.getJFormattedTextField().getText(); // Global Variable
+            endD = dateEndPicker.getJFormattedTextField().getText(); //   Global Variable
 
             String date = String.format("Start Date: %s End Date: %s", startDate, endDate);
             System.out.println(date);
         }
-        
-        //String startDate1=startDate.substring(0,10);
-        //String endDate1=endDate.substring(0,10);
-        
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-          
-        Date d1 = null;
-	Date d2 = null;
-        
-        if(startDate.isEmpty()==true || startDate==null ){
-           
-            startDate="0000-00-00";
-          
-        }
-        if(endDate.isEmpty()==true || endDate==null){
-            
-            endDate="0000-00-00";
-          
-        }
-         
 
-        d1 = format.parse(startDate+" 00:00:00");
-        d2 = format.parse(endDate+" 00:00:00");
-        
-			
-        long diff = d2.getTime() - d1.getTime();
-        
-        //System.out.print(diff);
-        
-        //long diffSeconds = diff / 1000 % 60;
-        //long diffMinutes = diff / (60 * 1000) % 60;
-        //long diffHours = diff / (60 * 60 * 1000) % 24;
-        dateDiff = diff / (24 * 60 * 60 * 1000);
-        if(this.startDate.equals(this.endDate) && (this.endDate.isEmpty()!= true || this.endDate != null)&& (this.startDate.isEmpty()!= true || this.startDate != null)){
-            dateDiff = 1;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        Date d1 = null;
+        Date d2 = null;
+
+        if (startD.isEmpty() == true || startD == null) {
+
+            startDate = "0000-00-00";
+
         }
-        
-        
-        
-//        System.out.print(diffDays + " days, ");
-//        System.out.print(diffHours + " hours, ");
-//	System.out.print(diffMinutes + " minutes, ");
-//	System.out.print(diffSeconds + " seconds.");
-        updateResults();
-        System.out.print(dateDiff + " days.");
+        if (endD.isEmpty() == true || endD == null) {
+
+            endDate = "0000-00-00";
+
+        }
+
+        d1 = format.parse(startD + " 00:00:00");
+        d2 = format.parse(endD + " 00:00:00");
+
+        if (d1.before(d2)) {
+            startDate = startD;
+            endDate = endD;
+            System.out.println("Date1 is before Date2");
+
+            long diff = d2.getTime() - d1.getTime();
+
+            dateDiff = diff / (24 * 60 * 60 * 1000);
+            if (this.startDate.equals(this.endDate) && (this.endDate.isEmpty() != true || this.endDate != null) && (this.startDate.isEmpty() != true || this.startDate != null)) {
+                dateDiff = 1;
+            }
+
+            updateResults();
+            System.out.print(dateDiff + " days.");
+        } else {
+            System.out.println("Date1 is not before Date2");
+            JOptionPane.showMessageDialog(this, "End Date must be greater than Start Date");
+
+        }
     }
 
     private void exportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportButtonActionPerformed
@@ -909,51 +895,47 @@ public class dataPage extends javax.swing.JFrame {
 
         SpinnerModel startModel = new SpinnerDateModel();
         SpinnerModel endModel = new SpinnerDateModel();
-        
+
         JSpinner timeStartSpinner = new JSpinner(startModel);
         JSpinner timeEndSpinner = new JSpinner(endModel);
 
-        
         JComponent startEditor = new JSpinner.DateEditor(timeStartSpinner, "HH:00:00");
         timePanel.add(new JLabel("Start Time"));
         timeStartSpinner.setEditor(startEditor);
         timePanel.add(timeStartSpinner);
 
-        
-        JComponent endEditor = new JSpinner.DateEditor(timeEndSpinner,"HH:00:00");
+        JComponent endEditor = new JSpinner.DateEditor(timeEndSpinner, "HH:00:00");
         timePanel.add(new JLabel("End Time"));
         timeEndSpinner.setEditor(endEditor);
         timePanel.add(timeEndSpinner);
 
-
         int result = JOptionPane.showConfirmDialog(null, timePanel,
                 "Please fill out the form.", JOptionPane.OK_CANCEL_OPTION);
-        
+
         if (result == JOptionPane.OK_OPTION) {
             try {
                 timeStartSpinner.commitEdit();
-                timeEndSpinner.commitEdit();            
+                timeEndSpinner.commitEdit();
             } catch (java.text.ParseException e) {
             }
-            
-            startTime  = new SimpleDateFormat("HH:00:00").format(timeStartSpinner.getValue());
+
+            startTime = new SimpleDateFormat("HH:00:00").format(timeStartSpinner.getValue());
             endTime = new SimpleDateFormat("HH:00:00").format(timeEndSpinner.getValue());
-            
-           String time = String.format("Start Time: %s End Time: %s", startTime, endTime);
-           System.out.println(time);
+
+            String time = String.format("Start Time: %s End Time: %s", startTime, endTime);
+            System.out.println(time);
 
         }
-        
-       startTime=startTime.substring(0,2);
-       endTime=endTime.substring(0,2);
-       
-       timeDiff=abs(parseInt(endTime)-parseInt(startTime));
-       
-       System.out.print(timeDiff);
-       System.out.print(startTime+endTime);
-        
-       
-       updateResults();
+
+        startTime = startTime.substring(0, 2);
+        endTime = endTime.substring(0, 2);
+
+        timeDiff = abs(parseInt(endTime) - parseInt(startTime));
+
+        System.out.print(timeDiff);
+        System.out.print(startTime + endTime);
+
+        updateResults();
     }
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         addSensor();
@@ -980,7 +962,7 @@ public class dataPage extends javax.swing.JFrame {
     }//GEN-LAST:event_updateSensorButtonActionPerformed
 
     private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
-       
+
     }//GEN-LAST:event_jList1ValueChanged
 
     private void jLabel4PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jLabel4PropertyChange
