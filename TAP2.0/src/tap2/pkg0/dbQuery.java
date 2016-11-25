@@ -39,7 +39,7 @@ public class dbQuery {
         }
         if(endDate.isEmpty()==true || endDate==null || endDate.equals("0000-00-00")){
             
-            endDate="3000-01-01";//This should be the lateist date in the database.
+            endDate="3000-01-01";//This should be the lateist date in the database..
             
           
         }

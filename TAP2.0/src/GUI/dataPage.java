@@ -194,10 +194,7 @@ public class dataPage extends javax.swing.JFrame {
             double expected = (double) dateDiff * timeDiff * this.locationsToShow.size();
             double percent = ((double) count / expected) * 100.0;
             checkText = Double.toString(percent) + "%";
-//            endDate = query.getMaxDate(startDate, endDate, startTime, endTime, locationsToShow);
-//            startDate = query.getMinDate(startDate, endDate, startTime, endTime, locationsToShow);
-//            System.out.println("StartDate: "+ startDate);
-//            System.out.println("EndDate: " + endDate);
+
 
         } catch (SQLException e) {
         }
@@ -743,8 +740,8 @@ public class dataPage extends javax.swing.JFrame {
 
     private void dateFilter() throws ParseException {
 
-        String startD = "";
-        String endD = "";
+        String startD = "0000-00-00";
+        String endD = "0000-00-00";
         JPanel serialPanel = new JPanel();
 
         UtilDateModel modelStartDate = new UtilDateModel();
@@ -926,7 +923,7 @@ public class dataPage extends javax.swing.JFrame {
             System.out.println(time);
 
         }
-
+        if((!startTime.equals("")) && (!endTime.equals(""))){ 
         startTime = startTime.substring(0, 2);
         endTime = endTime.substring(0, 2);
 
@@ -934,6 +931,7 @@ public class dataPage extends javax.swing.JFrame {
 
         System.out.print(timeDiff);
         System.out.print(startTime + endTime);
+    }
 
         updateResults();
     }
