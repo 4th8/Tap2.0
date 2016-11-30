@@ -853,13 +853,20 @@ public class dataPage extends javax.swing.JFrame {
         startTime = startTime.substring(0, 2);
         endTime = endTime.substring(0, 2);
 
-        timeDiff = abs(parseInt(endTime) - parseInt(startTime));
+        
 
         System.out.print(timeDiff);
         System.out.print(startTime + endTime);
     }
-
+        if(Integer.parseInt(startTime) > Integer.parseInt(endTime)){
+            JOptionPane.showMessageDialog(this, "End Time must be greater or equal to Start Time ");
+            startTime ="00";
+            endTime ="23";
+        }
+        else{
+        timeDiff = abs(parseInt(endTime) - parseInt(startTime));
         updateResults();
+        }
     }
     private void updateSensorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateSensorButtonActionPerformed
 
