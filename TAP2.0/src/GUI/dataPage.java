@@ -800,7 +800,7 @@ public class dataPage extends javax.swing.JFrame {
         d1 = format.parse(startD + " 00:00:00");
         d2 = format.parse(endD + " 00:00:00");
 
-        if (d1.before(d2)) {
+        if (d1.before(d2) || d1.equals(d2)) {
             startDate = startD;
             endDate = endD;
             System.out.println("Date1 is before Date2");
@@ -816,7 +816,7 @@ public class dataPage extends javax.swing.JFrame {
             System.out.print(dateDiff + " days.");
         } else {
             System.out.println("Date1 is not before Date2");
-            JOptionPane.showMessageDialog(this, "End Date must be greater than Start Date");
+            JOptionPane.showMessageDialog(this, "End Date must be greater than Start Date or Equal to Start Date");
 
         }
     }

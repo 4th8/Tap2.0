@@ -31,7 +31,14 @@ public class dbQuery {
     
 
     public void filterTable(String startDate, String endDate, String startTime, String endTime, ArrayList<String> locations){
-              
+        
+//        if(startTime.equals("") || endTime.equals("")){
+//            startTime = "00";
+//            endTime = "23";
+//        }
+//          System.out.println("this is start time:"  + startTime+".");
+//          System.out.println("this is end Time:  " + endTime);
+        
         if(startDate.isEmpty()==true || startDate==null || startDate.equals("0000-00-00") ){
            
             startDate="2000-01-01";
@@ -44,14 +51,33 @@ public class dbQuery {
           
         }
         String query =  "SELECT temperature.time_stamp, temperature.degrees_c, location.abbreviation FROM temperature JOIN location on temperature.location_id = location.location_id";
-        if(!startDate.equals(""))
-            query += " AND temperature.time_stamp >= '" + startDate + "'";
-        if(!endDate.equals(""))
-            query += " AND temperature.time_stamp < '" + endDate + "'";
-         if(!startTime.equals(""))
+        if(startDate.equals(endDate)){
+            String st = "00:00:00";
+            String et = "23:59:00";
+            if(!startTime.equals("")){
+                st = startTime + ":00:00";
+            }
+            if(!endTime.equals("")){
+                et = endTime + ":00:00";
+            }
+         query +=  " AND temperature.time_stamp >= '" + startDate + " " + st +"' AND temperature.time_stamp <= '" + startDate + " " + et +"'";
+        }
+        else{
+            if(!startDate.equals(""))
+                query += " AND temperature.time_stamp >= '" + startDate + "'";
+            if(endTime.equals("")){
+                endDate += " 23:59:00";
+            }
+            if(!endDate.equals(""))
+                query += " AND temperature.time_stamp <= '" + endDate + "'";
+        
+        if(!startTime.equals(""))
             query += " AND EXTRACT(hour from temperature.time_stamp) >= '" + startTime + "'";
         if(!endTime.equals(""))
             query +=  " AND EXTRACT(hour from temperature.time_stamp) <= '" + endTime +"'";
+        
+        
+        }
         if(!locations.isEmpty()){
             query += " AND location.full_name = '";
             int x = locations.size();
@@ -65,6 +91,7 @@ public class dbQuery {
             }
         }        
         this.tableQuery = query +";";
+        System.out.println(tableQuery);
     }
     
     public String getMaxDate(String startDate, String endDate, String startTime, String endTime, ArrayList<String> locations){
