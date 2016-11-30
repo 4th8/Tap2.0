@@ -942,7 +942,14 @@ public class dataPage extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        query.CLEAR();
+        JPanel serialPanel = new JPanel();
+        serialPanel.add(new JLabel("Pressing Ok will clear all of the temperature data in the database"));
+
+        int result = JOptionPane.showConfirmDialog(null, serialPanel,
+                "Please fill out the form.", JOptionPane.OK_CANCEL_OPTION);
+        if (result == JOptionPane.OK_OPTION) {
+            query.CLEAR();
+        }
         updateResults();
     }//GEN-LAST:event_jButton3ActionPerformed
 
