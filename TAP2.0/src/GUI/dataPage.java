@@ -252,6 +252,7 @@ public class dataPage extends javax.swing.JFrame {
         jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
+        jToggleButton1 = new javax.swing.JToggleButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -383,12 +384,20 @@ public class dataPage extends javax.swing.JFrame {
 
         jLabel7.setText(checkText);
 
+        jToggleButton1.setText("Clear Filter");
+        jToggleButton1.setToolTipText("Clear all filter");
+        jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearFilterActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout rawPanel2Layout = new javax.swing.GroupLayout(rawPanel2);
         rawPanel2.setLayout(rawPanel2Layout);
         rawPanel2Layout.setHorizontalGroup(
             rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(rawPanel2Layout.createSequentialGroup()
-                .addContainerGap(165, Short.MAX_VALUE)
+                .addContainerGap(124, Short.MAX_VALUE)
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rawPanel2Layout.createSequentialGroup()
                         .addComponent(importButton)
@@ -397,9 +406,9 @@ public class dataPage extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(statusField, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 826, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(rawPanel2Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
                         .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2)
@@ -409,15 +418,13 @@ public class dataPage extends javax.swing.JFrame {
                             .addComponent(jLabel6)
                             .addComponent(jLabel5)
                             .addComponent(jLabel4)))
-                    .addGroup(rawPanel2Layout.createSequentialGroup()
-                        .addGap(38, 38, 38)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(rawPanel2Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButton6)
-                            .addComponent(jButton7))))
+                    .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jButton6)
+                        .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton7)
+                            .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
             .addGroup(rawPanel2Layout.createSequentialGroup()
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -470,6 +477,8 @@ public class dataPage extends javax.swing.JFrame {
                         .addComponent(jButton6)
                         .addGap(1, 1, 1)
                         .addComponent(jButton7)
+                        .addGap(5, 5, 5)
+                        .addComponent(jToggleButton1)
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -499,24 +508,7 @@ public class dataPage extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    //private static String fileLocation;
-    private void statusFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statusFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_statusFieldActionPerformed
-
-    private void importButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importButtonActionPerformed
-        try {
-            importFile();
-        } catch (InvalidFilenameException ex) {
-            JPanel panel = new JPanel();
-            JOptionPane.showMessageDialog(panel, "Name must include serial number. \n Ex: 2015_<<serialNumber>>_temp.csv", "Invalid Filename", JOptionPane.ERROR_MESSAGE);
-        } catch (NotCSVException ex) {
-            JPanel panel = new JPanel();
-            JOptionPane.showMessageDialog(panel, "File must be a .csv format.", "Invalid Filetype", JOptionPane.ERROR_MESSAGE);
-        }
-        updateResults();
-    }//GEN-LAST:event_importButtonActionPerformed
-    private void importFile() throws InvalidFilenameException, NotCSVException {
+   private void importFile() throws InvalidFilenameException, NotCSVException {
         JFileChooser chooser = new JFileChooser();
         boolean fileChosen = false;
         if (this.importDefaultLocation != null) {
@@ -821,6 +813,124 @@ public class dataPage extends javax.swing.JFrame {
         }
     }
 
+    private void timeFilter() {
+        JPanel timePanel = new JPanel();
+
+        SpinnerModel startModel = new SpinnerDateModel();
+        SpinnerModel endModel = new SpinnerDateModel();
+
+        JSpinner timeStartSpinner = new JSpinner(startModel);
+        JSpinner timeEndSpinner = new JSpinner(endModel);
+
+        JComponent startEditor = new JSpinner.DateEditor(timeStartSpinner, "HH:00:00");
+        timePanel.add(new JLabel("Start Time"));
+        timeStartSpinner.setEditor(startEditor);
+        timePanel.add(timeStartSpinner);
+
+        JComponent endEditor = new JSpinner.DateEditor(timeEndSpinner, "HH:00:00");
+        timePanel.add(new JLabel("End Time"));
+        timeEndSpinner.setEditor(endEditor);
+        timePanel.add(timeEndSpinner);
+
+        int result = JOptionPane.showConfirmDialog(null, timePanel,
+                "Please fill out the form.", JOptionPane.OK_CANCEL_OPTION);
+
+        if (result == JOptionPane.OK_OPTION) {
+            try {
+                timeStartSpinner.commitEdit();
+                timeEndSpinner.commitEdit();
+            } catch (java.text.ParseException e) {
+            }
+
+            startTime = new SimpleDateFormat("HH:00:00").format(timeStartSpinner.getValue());
+            endTime = new SimpleDateFormat("HH:00:00").format(timeEndSpinner.getValue());
+
+            String time = String.format("Start Time: %s End Time: %s", startTime, endTime);
+            System.out.println(time);
+
+        }
+        if((!startTime.equals("")) && (!endTime.equals(""))){ 
+        startTime = startTime.substring(0, 2);
+        endTime = endTime.substring(0, 2);
+
+        timeDiff = abs(parseInt(endTime) - parseInt(startTime));
+
+        System.out.print(timeDiff);
+        System.out.print(startTime + endTime);
+    }
+
+        updateResults();
+    }
+    private void updateSensorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateSensorButtonActionPerformed
+
+    }//GEN-LAST:event_updateSensorButtonActionPerformed
+
+    private void timeFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_timeFilterActionPerformed
+        // TODO add your handling code here:
+        timeFilter();
+    }//GEN-LAST:event_timeFilterActionPerformed
+
+    private void dateFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dateFilterActionPerformed
+        try {
+            // TODO add your handling code here:
+            dateFilter();
+        } catch (ParseException ex) {
+            Logger.getLogger(dataPage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_dateFilterActionPerformed
+
+    private void updateSensorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateSensorActionPerformed
+        // TODO add your handling code here:
+        try {
+            // TODO add your handling code here:
+            updateSensor();
+        } catch (SQLException ex) {
+            Logger.getLogger(dataPage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        updateResults();
+    }//GEN-LAST:event_updateSensorActionPerformed
+
+    private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
+
+    }//GEN-LAST:event_jList1ValueChanged
+
+    private void jList1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseReleased
+        updateResults();
+    }//GEN-LAST:event_jList1MouseReleased
+
+    private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseClicked
+        updateResults();
+    }//GEN-LAST:event_jList1MouseClicked
+
+    private void jLabel4PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jLabel4PropertyChange
+        updateResults();
+    }//GEN-LAST:event_jLabel4PropertyChange
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        try {
+            removeSensor();
+        } catch (SQLException ex) {
+            Logger.getLogger(dataPage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        JPanel serialPanel = new JPanel();
+        serialPanel.add(new JLabel("Pressing Ok will clear all of the temperature data in the database"));
+
+        int result = JOptionPane.showConfirmDialog(null, serialPanel,
+            "Please fill out the form.", JOptionPane.OK_CANCEL_OPTION);
+        if (result == JOptionPane.OK_OPTION) {
+            query.CLEAR();
+        }
+        updateResults();
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        addSensor();
+        updateResults();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     private void exportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportButtonActionPerformed
 
         try {
@@ -884,128 +994,33 @@ public class dataPage extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(dataPage.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }//GEN-LAST:event_exportButtonActionPerformed
 
-    private void timeFilter() {
-        JPanel timePanel = new JPanel();
+    private void statusFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statusFieldActionPerformed
 
-        SpinnerModel startModel = new SpinnerDateModel();
-        SpinnerModel endModel = new SpinnerDateModel();
+    }//GEN-LAST:event_statusFieldActionPerformed
 
-        JSpinner timeStartSpinner = new JSpinner(startModel);
-        JSpinner timeEndSpinner = new JSpinner(endModel);
-
-        JComponent startEditor = new JSpinner.DateEditor(timeStartSpinner, "HH:00:00");
-        timePanel.add(new JLabel("Start Time"));
-        timeStartSpinner.setEditor(startEditor);
-        timePanel.add(timeStartSpinner);
-
-        JComponent endEditor = new JSpinner.DateEditor(timeEndSpinner, "HH:00:00");
-        timePanel.add(new JLabel("End Time"));
-        timeEndSpinner.setEditor(endEditor);
-        timePanel.add(timeEndSpinner);
-
-        int result = JOptionPane.showConfirmDialog(null, timePanel,
-                "Please fill out the form.", JOptionPane.OK_CANCEL_OPTION);
-
-        if (result == JOptionPane.OK_OPTION) {
-            try {
-                timeStartSpinner.commitEdit();
-                timeEndSpinner.commitEdit();
-            } catch (java.text.ParseException e) {
-            }
-
-            startTime = new SimpleDateFormat("HH:00:00").format(timeStartSpinner.getValue());
-            endTime = new SimpleDateFormat("HH:00:00").format(timeEndSpinner.getValue());
-
-            String time = String.format("Start Time: %s End Time: %s", startTime, endTime);
-            System.out.println(time);
-
-        }
-        if((!startTime.equals("")) && (!endTime.equals(""))){ 
-        startTime = startTime.substring(0, 2);
-        endTime = endTime.substring(0, 2);
-
-        timeDiff = abs(parseInt(endTime) - parseInt(startTime));
-
-        System.out.print(timeDiff);
-        System.out.print(startTime + endTime);
-    }
-
-        updateResults();
-    }
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        addSensor();
-        updateResults();
-
-    }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        JPanel serialPanel = new JPanel();
-        serialPanel.add(new JLabel("Pressing Ok will clear all of the temperature data in the database"));
-
-        int result = JOptionPane.showConfirmDialog(null, serialPanel,
-                "Please fill out the form.", JOptionPane.OK_CANCEL_OPTION);
-        if (result == JOptionPane.OK_OPTION) {
-            query.CLEAR();
-        }
-        updateResults();
-    }//GEN-LAST:event_jButton3ActionPerformed
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void importButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importButtonActionPerformed
         try {
-            removeSensor();
-        } catch (SQLException ex) {
-            Logger.getLogger(dataPage.class.getName()).log(Level.SEVERE, null, ex);
+            importFile();
+        } catch (InvalidFilenameException ex) {
+            JPanel panel = new JPanel();
+            JOptionPane.showMessageDialog(panel, "Name must include serial number. \n Ex: 2015_<<serialNumber>>_temp.csv", "Invalid Filename", JOptionPane.ERROR_MESSAGE);
+        } catch (NotCSVException ex) {
+            JPanel panel = new JPanel();
+            JOptionPane.showMessageDialog(panel, "File must be a .csv format.", "Invalid Filetype", JOptionPane.ERROR_MESSAGE);
         }
-
-    }//GEN-LAST:event_jButton4ActionPerformed
-
-    private void updateSensorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateSensorButtonActionPerformed
-
-    }//GEN-LAST:event_updateSensorButtonActionPerformed
-
-    private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
-
-    }//GEN-LAST:event_jList1ValueChanged
-
-    private void jLabel4PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jLabel4PropertyChange
         updateResults();
-    }//GEN-LAST:event_jLabel4PropertyChange
+    }//GEN-LAST:event_importButtonActionPerformed
 
-    private void updateSensorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateSensorActionPerformed
+    private void clearFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearFilterActionPerformed
         // TODO add your handling code here:
-        try {
-            // TODO add your handling code here:
-            updateSensor();
-        } catch (SQLException ex) {
-            Logger.getLogger(dataPage.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        startDate = "";
+        endDate = "";
+        startTime= "00";
+        endTime = "23";
         updateResults();
-    }//GEN-LAST:event_updateSensorActionPerformed
-
-    private void timeFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_timeFilterActionPerformed
-        // TODO add your handling code here:
-        timeFilter();
-    }//GEN-LAST:event_timeFilterActionPerformed
-
-    private void dateFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dateFilterActionPerformed
-        try {
-            // TODO add your handling code here:
-            dateFilter();
-        } catch (ParseException ex) {
-            Logger.getLogger(dataPage.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_dateFilterActionPerformed
-
-    private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseClicked
-        updateResults();
-    }//GEN-LAST:event_jList1MouseClicked
-
-    private void jList1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseReleased
-        updateResults();
-    }//GEN-LAST:event_jList1MouseReleased
+    }//GEN-LAST:event_clearFilterActionPerformed
     private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // textArea.setText("");
         // statusField.setText("New file");
@@ -1032,6 +1047,7 @@ public class dataPage extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
+    private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JPanel rawPanel2;
     private javax.swing.JTable rawTable;
     private javax.swing.JTextField statusField;
