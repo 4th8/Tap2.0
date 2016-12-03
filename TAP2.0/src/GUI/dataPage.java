@@ -193,6 +193,7 @@ public class dataPage extends javax.swing.JFrame {
             results = new DefaultTableModel(rows, columnNames);
             double expected = (double) dateDiff * timeDiff * this.locationsToShow.size();
             double percent = ((double) count / expected) * 100.0;
+            System.out.println(expected + " " + count);
             checkText = Double.toString(percent) + "%";
 
 

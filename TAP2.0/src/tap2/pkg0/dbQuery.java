@@ -79,7 +79,7 @@ public class dbQuery {
         
         }
         if(!locations.isEmpty()){
-            query += " AND location.full_name = '";
+            query += " AND (location.full_name = '";
             int x = locations.size();
             for(int i = 0; i < x; i++){
                 if(i == 0){
@@ -89,6 +89,7 @@ public class dbQuery {
                     query += " OR location.full_name = '" + locations.get(i) + "'";
                 }
             }
+              query += ")";
         }        
         this.tableQuery = query +";";
         System.out.println(tableQuery);
