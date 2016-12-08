@@ -230,7 +230,6 @@ public class dataPage extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane2 = new javax.swing.JTabbedPane();
         rawPanel2 = new javax.swing.JPanel();
         jLabel22 = new javax.swing.JLabel();
         importButton = new javax.swing.JButton();
@@ -254,11 +253,8 @@ public class dataPage extends javax.swing.JFrame {
         jButton7 = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
         jToggleButton1 = new javax.swing.JToggleButton();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jTabbedPane2.setBackground(new java.awt.Color(204, 255, 204));
 
         rawPanel2.setBackground(new java.awt.Color(204, 255, 255));
 
@@ -398,7 +394,7 @@ public class dataPage extends javax.swing.JFrame {
         rawPanel2Layout.setHorizontalGroup(
             rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(rawPanel2Layout.createSequentialGroup()
-                .addContainerGap(124, Short.MAX_VALUE)
+                .addContainerGap(159, Short.MAX_VALUE)
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rawPanel2Layout.createSequentialGroup()
                         .addComponent(importButton)
@@ -454,12 +450,12 @@ public class dataPage extends javax.swing.JFrame {
                     .addGroup(rawPanel2Layout.createSequentialGroup()
                         .addGap(45, 45, 45)
                         .addComponent(jLabel7)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(importButton)
                     .addComponent(statusField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(exportButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
                 .addGroup(rawPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(rawPanel2Layout.createSequentialGroup()
@@ -487,23 +483,15 @@ public class dataPage extends javax.swing.JFrame {
                 .addGap(18, 18, 18))
         );
 
-        jTabbedPane2.addTab("Raw Data", rawPanel2);
-        jTabbedPane2.addTab("Graph", jTabbedPane1);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1149, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(rawPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jTabbedPane2)
-                .addContainerGap())
+            .addComponent(rawPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -1056,8 +1044,6 @@ public class dataPage extends javax.swing.JFrame {
     private javax.swing.JList<String> jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JPanel rawPanel2;
     private javax.swing.JTable rawTable;
