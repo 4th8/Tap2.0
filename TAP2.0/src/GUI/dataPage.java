@@ -154,7 +154,7 @@ public class dataPage extends javax.swing.JFrame {
             // Get all rows.
             Vector rows = new Vector();
             high = 0;
-            low = 0;
+            low = 99999;
             average = 0;
 
             ArrayList<Date> timeStampList = new ArrayList<Date>();
