@@ -1027,6 +1027,9 @@ public class dataPage extends javax.swing.JFrame {
         endDate = "";
         startTime= "00";
         endTime = "23";
+        locationsToShow.clear();
+        jList1.clearSelection();
+        
         updateResults();
     }//GEN-LAST:event_clearFilterActionPerformed
     private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {
