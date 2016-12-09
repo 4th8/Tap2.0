@@ -191,11 +191,16 @@ public class dataPage extends javax.swing.JFrame {
             End Snippet
              */
             results = new DefaultTableModel(rows, columnNames);
-            double expected = (double) dateDiff * timeDiff * this.locationsToShow.size();
+            double expected = (double) dateDiff    * timeDiff * this.locationsToShow.size();
             double percent = ((double) count / expected) * 100.0;
-            System.out.println(expected + " " + count);
+            System.out.println(expected + " " + count +"Date diff: "+ dateDiff);
+            if(expected==0){
+                checkText = "";
+            }
+            else
+            {
             checkText = Double.toString(percent) + "%";
-
+            }
 
         } catch (SQLException e) {
         }
@@ -791,6 +796,9 @@ public class dataPage extends javax.swing.JFrame {
             dateDiff = diff / (24 * 60 * 60 * 1000);
             if (this.startDate.equals(this.endDate) && (this.endDate.isEmpty() != true || this.endDate != null) && (this.startDate.isEmpty() != true || this.startDate != null)) {
                 dateDiff = 1;
+            }
+            else{
+                dateDiff += 1; 
             }
 
             updateResults();
